@@ -128,6 +128,14 @@ export const dictionaries = {
     invalid_product: "Проверьте поля товара и характеристики.",
     server_error: "Не удалось выполнить запрос. Попробуйте ещё раз.",
     network_error: "Нет соединения с сервером. Попробуйте ещё раз.",
+    standaloneTitle: "Локальный просмотр — как запустить полный магазин",
+    server_required:
+      "Каталог и конструктор работают без сервера. Для регистрации, заказов и админ-панели запустите полный магазин с базой данных.",
+    launchNode: "Установите Node.js 24 или новее с официального сайта:",
+    launchUnzip:
+      "Полностью распакуйте ZIP в обычную папку. Не запускайте файлы внутри архива.",
+    launchFile: "Откройте файл запуска в распакованной папке:",
+    launchTerminal: "Или выполните в терминале из папки проекта:",
     admin: "Управление магазином",
     adminTitle: "Товары магазина",
     newProduct: "Добавить товар",
@@ -310,6 +318,14 @@ export const dictionaries = {
     invalid_product: "Check product fields and specifications.",
     server_error: "The request failed. Please try again.",
     network_error: "Cannot connect to the server. Please try again.",
+    standaloneTitle: "Local preview — how to start the full shop",
+    server_required:
+      "The catalog and PC builder work without a server. Start the full shop with its database to use registration, orders and the admin panel.",
+    launchNode: "Install Node.js 24 or newer from the official website:",
+    launchUnzip:
+      "Extract the entire ZIP into a regular folder. Do not run files from inside the archive.",
+    launchFile: "Open the launcher in the extracted folder:",
+    launchTerminal: "Or run this in a terminal in the project folder:",
     admin: "Manage store",
     adminTitle: "Store products",
     newProduct: "Add product",
@@ -491,6 +507,14 @@ export const dictionaries = {
     invalid_product: "Mahsulot maydonlarini tekshiring.",
     server_error: "So‘rov bajarilmadi. Yana urinib ko‘ring.",
     network_error: "Serverga ulanib bo‘lmadi. Qayta urinib ko‘ring.",
+    standaloneTitle: "Mahalliy ko‘rish — to‘liq do‘konni ishga tushirish",
+    server_required:
+      "Katalog va kompyuter yig‘ish serversiz ishlaydi. Ro‘yxatdan o‘tish, buyurtmalar va admin paneli uchun bazali to‘liq do‘konni ishga tushiring.",
+    launchNode: "Rasmiy saytdan Node.js 24 yoki yangirog‘ini o‘rnating:",
+    launchUnzip:
+      "ZIP arxivini oddiy papkaga to‘liq oching. Fayllarni arxiv ichidan ishga tushirmang.",
+    launchFile: "Ochilgan papkadagi ishga tushirish faylini oching:",
+    launchTerminal: "Yoki loyiha papkasida terminaldan bajaring:",
     admin: "Do‘konni boshqarish",
     adminTitle: "Do‘kon mahsulotlari",
     newProduct: "Mahsulot qo‘shish",

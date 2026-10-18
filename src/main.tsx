@@ -59,6 +59,14 @@ import {
 } from "./types";
 import { Logo, ProductArt, PCVisual } from "./Art";
 import "./styles.css";
+import {
+  standalone,
+  currentRoute,
+  routeHref,
+  readLocal,
+  writeLocal,
+  decodeProductId,
+} from "./runtime";
 
 const categoryIcons: Record<Category, typeof Cpu> = {
   cpu: Cpu,
@@ -73,14 +81,6 @@ const categoryIcons: Record<Category, typeof Cpu> = {
   case: Box,
   build: Monitor,
 };
-function readLocal<T>(key: string, fallback: T): T {
-  try {
-    const val = localStorage.getItem(key);
-    return val ? JSON.parse(val) : fallback;
-  } catch {
-    return fallback;
-  }
-}
 const initialCart = () => {
   const value = readLocal<unknown>("shoh-cart", []);
   return Array.isArray(value)
@@ -114,7 +114,12 @@ function App() {
     [expanded, setExpanded] = useState(false);
   const [cart, setCart] = useState<CartItem[]>(initialCart),
     [favorites, setFavorites] = useState<string[]>(() =>
-      readLocal("shoh-favorites", []),
+      (() => {
+        const value = readLocal<unknown>("shoh-favorites", []);
+        return Array.isArray(value)
+          ? value.filter((id): id is string => typeof id === "string")
+          : [];
+      })(),
     ),
     [favoritesOnly, setFavoritesOnly] = useState(false);
   const [user, setUser] = useState<User | null>(null),
@@ -129,7 +134,7 @@ function App() {
     [info, setInfo] = useState<"delivery" | "warranty" | "contact" | null>(
       null,
     );
-  const [path, setPath] = useState(location.pathname),
+  const [path, setPath] = useState(currentRoute),
     [toast, setToast] = useState(""),
     [orderSuccess, setOrderSuccess] = useState<{
       id: string;
@@ -142,19 +147,23 @@ function App() {
   useEffect(() => {
     const el = document.documentElement;
     el.lang = lang;
-    localStorage.setItem("shoh-lang", JSON.stringify(lang));
+    writeLocal("shoh-lang", lang);
   }, [lang]);
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    localStorage.setItem("shoh-theme", JSON.stringify(theme));
+    writeLocal("shoh-theme", theme);
   }, [theme]);
   useEffect(() => {
     const fn = () => {
-      setPath(location.pathname);
+      setPath(currentRoute());
       window.scrollTo(0, 0);
     };
     window.addEventListener("popstate", fn);
-    return () => window.removeEventListener("popstate", fn);
+    window.addEventListener("hashchange", fn);
+    return () => {
+      window.removeEventListener("popstate", fn);
+      window.removeEventListener("hashchange", fn);
+    };
   }, []);
   useEffect(() => {
     if (toast) {
@@ -163,7 +172,7 @@ function App() {
     }
   }, [toast]);
   const navigate = (next: string) => {
-    if (location.pathname !== next) history.pushState({}, "", next);
+    if (currentRoute() !== next) history.pushState({}, "", routeHref(next));
     setPath(next);
     window.scrollTo({ top: 0, behavior: "auto" });
     setMobileNav(false);
@@ -190,7 +199,7 @@ function App() {
       .finally(() => setAuthReady(true));
   }, []);
   useEffect(() => {
-    localStorage.setItem("shoh-cart", JSON.stringify(cart));
+    writeLocal("shoh-cart", cart);
     if (user && cartReady && cartUser.current === user.id && !syncing.current) {
       const timer = setTimeout(() => {
         api("/cart", "PUT", { items: cart }).catch((e) =>
@@ -229,7 +238,7 @@ function App() {
       });
   }, [user?.id, authReady]);
   useEffect(() => {
-    localStorage.setItem("shoh-favorites", JSON.stringify(favorites));
+    writeLocal("shoh-favorites", favorites);
   }, [favorites]);
   useEffect(() => {
     if (loading || loadError) return;
@@ -305,7 +314,7 @@ function App() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
   const selectedProduct = path.startsWith("/product/")
-    ? products.find((p) => p.id === decodeURIComponent(path.slice(9)))
+    ? products.find((p) => p.id === decodeProductId(path))
     : undefined;
   const isAdmin = path === "/admin";
   useEffect(() => {
@@ -612,7 +621,7 @@ function App() {
       <article className="product-card">
         <div className="product-image">
           <a
-            href={"/product/" + p.id}
+            href={routeHref("/product/" + p.id)}
             onClick={(e) => {
               e.preventDefault();
               navigate("/product/" + p.id);
@@ -640,7 +649,7 @@ function App() {
           <div className="product-category">{t(p.category)}</div>
           <a
             className="product-name"
-            href={"/product/" + p.id}
+            href={routeHref("/product/" + p.id)}
             onClick={(e) => {
               e.preventDefault();
               navigate("/product/" + p.id);
@@ -686,7 +695,7 @@ function App() {
     );
   }
   const home = (
-    <main id="main-content">
+    <main id="main-content" tabIndex={-1}>
       <section className="container hero-section">
         <div className="hero">
           <div className="hero-content">
@@ -733,7 +742,9 @@ function App() {
           </div>
           <div className="hero-visual">
             <img
-              src="/images/hero-pc.webp"
+              src={
+                standalone ? window.__SHOHSTORE_HERO__ : "/images/hero-pc.webp"
+              }
               alt="Shohstore PRO — компьютер с прозрачным корпусом и мягкой подсветкой"
               fetchPriority="high"
               width="1024"
@@ -945,7 +956,7 @@ function App() {
     </main>
   );
   const productPage = selectedProduct ? (
-    <main className="container product-page" id="main-content">
+    <main className="container product-page" id="main-content" tabIndex={-1}>
       <div className="breadcrumbs">
         <button onClick={() => navigate("/")}>{t("home")}</button>
         <ChevronRight size={13} />
@@ -1116,10 +1127,31 @@ function App() {
 
   return (
     <>
-      <a className="skip-link" href="#main-content">
+      <a
+        className="skip-link"
+        href="#main-content"
+        onClick={(e) => {
+          e.preventDefault();
+          const main = document.getElementById("main-content");
+          main?.focus();
+          main?.scrollIntoView();
+        }}
+      >
         {t("skipContent")}
       </a>
       {header}
+      {standalone && (
+        <div className="container">
+          <details className="standalone-notice">
+            <summary>
+              <Monitor size={16} />
+              <span>{t("standaloneTitle")}</span>
+              <ChevronDown size={14} />
+            </summary>
+            <LaunchInstructions t={t} />
+          </details>
+        </div>
+      )}
       {isAdmin ? (
         <AdminPanel
           user={user}
@@ -1564,6 +1596,16 @@ function AuthForm({
       setBusy(false);
     }
   }
+  if (standalone)
+    return (
+      <>
+        <div className="auth-mark">
+          <Monitor size={29} />
+        </div>
+        <h2>{t("standaloneTitle")}</h2>
+        <LaunchInstructions t={t} />
+      </>
+    );
   return (
     <>
       <div className="auth-mark">
@@ -1890,7 +1932,7 @@ function AdminPanel({
     }
   }
   return (
-    <main className="container admin-page" id="main-content">
+    <main className="container admin-page" id="main-content" tabIndex={-1}>
       <div className="section-heading">
         <div>
           <div className="eyebrow">SHOHSTORE ADMIN</div>
@@ -2088,8 +2130,63 @@ function specLabel(k: string, l: Lang) {
   };
   return labels[k]?.[l] || k;
 }
+function LaunchInstructions({ t }: { t: Translator }) {
+  return (
+    <div className="launch-instructions">
+      <p>{t("server_required")}</p>
+      <ol>
+        <li>
+          {t("launchNode")}{" "}
+          <a href="https://nodejs.org/" target="_blank" rel="noreferrer">
+            nodejs.org ↗
+          </a>
+        </li>
+        <li>{t("launchUnzip")}</li>
+        <li>
+          {t("launchFile")} <code>START-SHOHSTORE.bat</code> (Windows),{" "}
+          <code>START-SHOHSTORE.command</code> (macOS),{" "}
+          <code>START-SHOHSTORE.sh</code> (Linux).
+        </li>
+      </ol>
+      <p>
+        {t("launchTerminal")} <code>npm run launch</code>
+      </p>
+    </div>
+  );
+}
+class StoreErrorBoundary extends React.Component<
+  React.PropsWithChildren,
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch(error: Error) {
+    console.error("Shohstore rendering error:", error);
+  }
+  render() {
+    return this.state.failed ? (
+      <main className="container empty-area">
+        <AlertCircle size={35} />
+        <h1>Не удалось открыть Shohstore</h1>
+        <p>
+          Обновите страницу. Для полного магазина запустите START-SHOHSTORE.bat
+          (Windows) или npm run launch.
+        </p>
+        <button className="button primary" onClick={() => location.reload()}>
+          Обновить страницу
+        </button>
+      </main>
+    ) : (
+      this.props.children
+    );
+  }
+}
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <StoreErrorBoundary>
+      <App />
+    </StoreErrorBoundary>
   </React.StrictMode>,
 );

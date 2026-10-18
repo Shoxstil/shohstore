@@ -344,9 +344,9 @@ app.delete("/api/admin/products/:id", auth, admin, (req, res) => {
     .json(result.changes ? { ok: true } : { error: "not_found" });
 });
 app.use("/api", (_, res) => res.status(404).json({ error: "not_found" }));
-if (existsSync(resolve("dist/index.html"))) {
-  app.use(express.static(resolve("dist"), { maxAge: "1h" }));
-  app.get("/{*path}", (_, res) => res.sendFile(resolve("dist/index.html")));
+if (existsSync(resolve("dist/frontend.html"))) {
+  app.use(express.static(resolve("dist"), { maxAge: "1h", index: false }));
+  app.get("/{*path}", (_, res) => res.sendFile(resolve("dist/frontend.html")));
 }
 app.use((err, req, res, next) => {
   console.error(err.message);

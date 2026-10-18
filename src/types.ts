@@ -1,4 +1,5 @@
 import type { Lang } from "./i18n";
+import { standalone } from "./runtime";
 export type Category =
   | "cpu"
   | "gpu"
@@ -61,6 +62,12 @@ export async function api<T = Record<string, unknown>>(
   method = "GET",
   body?: unknown,
 ): Promise<T> {
+  if (standalone) {
+    if (method === "GET" && path === "/products")
+      return { products: window.__SHOHSTORE_CATALOG__ || [] } as T;
+    if (method === "GET" && path === "/auth/me") return { user: null } as T;
+    throw Error("server_required");
+  }
   let r: Response;
   try {
     r = await fetch("/api" + path, {
@@ -72,7 +79,12 @@ export async function api<T = Record<string, unknown>>(
   } catch {
     throw Error("network_error");
   }
-  const data = await r.json();
+  let data;
+  try {
+    data = await r.json();
+  } catch {
+    throw Error("server_error");
+  }
   if (!r.ok) throw Error(data.error || "server_error");
   return data;
 }

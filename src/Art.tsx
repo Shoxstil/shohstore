@@ -1,10 +1,11 @@
 import type { Category, Product } from "./types";
 import { useId, useState, useEffect } from "react";
+import { routeHref } from "./runtime";
 export function Logo({ small = false }: { small?: boolean }) {
   return (
     <a
       className={"logo" + (small ? " small" : "")}
-      href="/"
+      href={routeHref("/")}
       aria-label="Shohstore"
     >
       <svg
