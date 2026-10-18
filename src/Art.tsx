@@ -1,12 +1,24 @@
 import type { Category, Product } from "./types";
 import { useId, useState, useEffect } from "react";
 import { routeHref } from "./runtime";
-export function Logo({ small = false }: { small?: boolean }) {
+export function Logo({
+  small = false,
+  onNavigate,
+}: {
+  small?: boolean;
+  onNavigate?: () => void;
+}) {
   return (
     <a
       className={"logo" + (small ? " small" : "")}
       href={routeHref("/")}
       aria-label="Shohstore"
+      onClick={(e) => {
+        if (onNavigate) {
+          e.preventDefault();
+          onNavigate();
+        }
+      }}
     >
       <svg
         width="38"
@@ -50,17 +62,18 @@ export function Logo({ small = false }: { small?: boolean }) {
 function Fan({ x, y, r = 22 }: { x: number; y: number; r?: number }) {
   return (
     <g transform={`translate(${x} ${y})`}>
-      <circle r={r} fill="#181b20" stroke="#4e5258" strokeWidth="2" />
-      <circle r={r - 4} fill="none" stroke="#bd8678" strokeWidth="2" />
-      {[0, 72, 144, 216, 288].map((a) => (
+      <circle r={r} fill="#20262d" stroke="#626971" strokeWidth="1.2" />
+      <circle r={r - 3} fill="none" stroke="#cb9e86" strokeWidth="1.4" />
+      {Array.from({ length: 7 }, (_, i) => (
         <path
-          key={a}
-          transform={`rotate(${a})`}
-          d={`M0 0 Q${r} -${r} ${r - 7} 0 Q${r - 9} ${r / 2} 0 0`}
-          fill="#383d44"
+          key={i}
+          transform={`rotate(${(i * 360) / 7}) scale(${r / 26})`}
+          d="M-2-4C-6-13 1-23 11-20C16-17 9-9 3-2Z"
+          fill="#505963"
         />
       ))}
-      <circle r="5" fill="#797d82" />
+      <circle r={r * 0.2} fill="#a8adb0" />
+      <circle r={r * 0.09} fill="#39414a" />
     </g>
   );
 }
@@ -85,6 +98,34 @@ export function ProductArt({
         alt={product.name}
         loading="lazy"
         onError={() => setFailed(true)}
+      />
+    );
+  if (cat === "case" || cat === "build")
+    return (
+      <PCVisual
+        installed={
+          cat === "build"
+            ? [
+                "build",
+                /LS520|LS720|Kraken|Liquid|H100i|Pure Loop/i.test(
+                  product?.specs.Cooling || "",
+                )
+                  ? "liquid"
+                  : "cooler",
+              ]
+            : []
+        }
+        className={"product-art " + className}
+        title={product?.name || "PC case"}
+      />
+    );
+  if (cat === "mouse" || cat === "keyboard" || cat === "headset")
+    return (
+      <PeripheralArt
+        category={cat}
+        product={product}
+        title={product?.name || cat}
+        className={className}
       />
     );
   return (
@@ -155,7 +196,7 @@ export function ProductArt({
             fontWeight="700"
             fontFamily="Arial"
           >
-            {product?.brand === "Intel" ? "CORE i5" : "RYZEN"}
+            {product?.brand === "Intel" ? "CORE" : "RYZEN"}
           </text>
           <text
             x="0"
@@ -165,11 +206,7 @@ export function ProductArt({
             fontSize="7"
             fontFamily="Arial"
           >
-            {product?.name.includes("7600")
-              ? "5 7600"
-              : product?.brand === "Intel"
-                ? "i5-14600KF"
-                : "7 7800X3D"}
+            {product?.name.replace(/^(AMD Ryzen|Intel Core)\s*/, "") || "CPU"}
           </text>
           <text x="0" y="42" textAnchor="middle" fill="#71777a" fontSize="5.5">
             DIFFUSED IN TAIWAN · MADE IN MALAYSIA
@@ -204,7 +241,7 @@ export function ProductArt({
             fontWeight="700"
             textAnchor="middle"
           >
-            GEFORCE RTX
+            {product?.specs.GPU?.toUpperCase() || "GRAPHICS"}
           </text>
         </g>
       ) : cat.startsWith("mb-") ? (
@@ -247,7 +284,7 @@ export function ProductArt({
           />
           <circle cx="113" cy="143" r="10" fill="#8e9698" />
           <text x="69" y="106" fill="#c9cdd0" fontSize="7" textAnchor="middle">
-            {product?.brand === "MSI" ? "MSI PRO" : "TUF GAMING"}
+            {product?.brand?.toUpperCase() || "MAINBOARD"}
           </text>
         </g>
       ) : cat === "ram" ? (
@@ -281,38 +318,11 @@ export function ProductArt({
                 fontWeight="700"
                 fontFamily="Arial"
               >
-                VENGEANCE
+                {product?.brand?.toUpperCase() || "MEMORY"}
               </text>
               <path d="M14 53h112v6H14Zm120 0h103v6H134Z" fill="#bcab72" />
             </g>
           ))}
-        </g>
-      ) : cat === "case" || cat === "build" ? (
-        <g transform="translate(80 12)" filter={`url(#${id}shadow)`}>
-          <path
-            d="m0 22 112-14 50 25v164l-112 17-50-26Z"
-            fill="#202329"
-            stroke="#484c51"
-          />
-          <path d="M6 27 109 15v173L6 179Z" fill="#2d3038" stroke="#4d5158" />
-          <path d="m115 17 39 20v153l-39 8Z" fill="#15171c" />
-          {[66, 112, 157].map((y) => (
-            <g key={y} transform={`translate(136 ${y}) scale(.55 1)`}>
-              <Fan x={0} y={0} r={21} />
-            </g>
-          ))}
-          <rect
-            x="22"
-            y="45"
-            width="65"
-            height="112"
-            fill="#343941"
-            stroke="#4c545c"
-          />
-          <Fan x={54} y={78} r={22} />
-          <path d="M12 128h83v19H12" fill="#565b62" />
-          <rect x="79" y="48" width="4" height="53" fill="#d6a296" />
-          <path d="m15 192 2 11m121-5v9" stroke="#282c33" strokeWidth="7" />
         </g>
       ) : cat === "psu" ? (
         <g
@@ -333,7 +343,7 @@ export function ProductArt({
             fontSize="17"
             fontWeight="700"
           >
-            RM750e
+            {product?.specs.Power || "PSU"}
           </text>
           <text
             x="139"
@@ -343,7 +353,7 @@ export function ProductArt({
             fill="#a4aaac"
             fontSize="7"
           >
-            80 PLUS GOLD
+            {product?.specs.Certification?.toUpperCase() || "ATX PSU"}
           </text>
         </g>
       ) : cat === "ssd" ? (
@@ -354,10 +364,10 @@ export function ProductArt({
           <rect width="250" height="55" rx="3" fill="#292d2b" />
           <rect x="18" y="7" width="212" height="41" fill="#1b1e20" />
           <text x="29" y="25" fill="#c1c4c2" fontSize="10" fontWeight="700">
-            SAMSUNG
+            {product?.brand?.toUpperCase() || "SSD"}
           </text>
           <text x="29" y="41" fill="#b7b6b0" fontSize="14" fontWeight="700">
-            990 EVO
+            {product?.brand?.toUpperCase() || "NVMe SSD"}
           </text>
           <text x="195" y="31" fill="#c9d3cb" fontSize="13" fontWeight="700">
             1TB
@@ -393,7 +403,7 @@ export function ProductArt({
           />
           <circle cx="229" cy="150" r="23" fill="#24282e" stroke="#ba817b" />
           <text x="229" y="154" fill="#c7c7c7" fontSize="8" textAnchor="middle">
-            DEEPCOOL
+            {product?.brand?.toUpperCase() || "AIO"}
           </text>
         </g>
       ) : (
@@ -420,100 +430,455 @@ export function ProductArt({
     </svg>
   );
 }
-export function PCVisual({ installed = [] }: { installed?: Category[] }) {
+export function PCVisual({
+  installed = [],
+  title = "PC build diagram",
+  className = "",
+}: {
+  installed?: Category[];
+  title?: string;
+  className?: string;
+}) {
+  const id = useId().replace(/:/g, "");
   const has = (c: Category) =>
     installed.includes(c) || installed.includes("build");
+  const liquidActive =
+    installed.includes("liquid") ||
+    (installed.includes("build") && !installed.includes("cooler"));
+  const airActive = installed.includes("cooler") && !liquidActive;
+  const group = (c: Category, active = has(c)) => ({
+    "data-component": c,
+    "data-installed": active,
+    className: active ? "installed" : "uninstalled",
+  });
   return (
     <svg
-      viewBox="0 0 270 300"
-      className="pc-visual"
+      viewBox="0 0 380 400"
+      className={"pc-visual " + className}
       role="img"
-      aria-label="PC build visualization"
+      aria-label={title}
     >
       <defs>
-        <linearGradient id="casegrad">
-          <stop stopColor="#383b41" />
-          <stop offset="1" stopColor="#1d2025" />
+        <linearGradient id={id + "frame"} x1="0" y1="0" x2="1" y2="1">
+          <stop stopColor="#454d56" />
+          <stop offset="1" stopColor="#1f252c" />
+        </linearGradient>
+        <linearGradient id={id + "glass"}>
+          <stop stopColor="#28323c" />
+          <stop offset="1" stopColor="#1c252e" />
         </linearGradient>
       </defs>
-      <path
-        d="m25 31 166-16 48 30v220l-168 20-46-29Z"
-        fill="url(#casegrad)"
-        stroke="#606369"
-        strokeWidth="1.5"
+      <ellipse cx="192" cy="378" rx="143" ry="9" fill="#11191f" opacity=".12" />
+      <rect x="63" y="350" width="35" height="20" rx="3" fill="#242b33" />
+      <rect x="283" y="350" width="35" height="20" rx="3" fill="#242b33" />
+      <rect
+        x="39"
+        y="24"
+        width="302"
+        height="333"
+        rx="10"
+        fill={"url(#" + id + "frame)"}
+        stroke="#68727c"
+        strokeWidth="1.4"
       />
-      <path d="m34 39 148-14v226L34 264Z" fill="#24282e" stroke="#555a63" />
-      <path d="m194 27 35 24v207l-35 10Z" fill="#191c21" />
-      {[82, 146, 210].map((y) => (
-        <g key={y} transform={`translate(211 ${y}) scale(.5 1)`}>
-          <Fan x={0} y={0} r={24} />
-        </g>
+      <rect x="47" y="32" width="286" height="15" rx="3" fill="#343e48" />
+      <circle cx="315" cy="39" r="3" fill="#d6b399" />
+      <path
+        d="M61 38h76m7 0h8m7 0h8m7 0h8"
+        stroke="#737c84"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <rect
+        x="50"
+        y="56"
+        width="222"
+        height="279"
+        rx="5"
+        fill={"url(#" + id + "glass)"}
+        stroke="#596570"
+      />
+      <rect
+        x="281"
+        y="56"
+        width="49"
+        height="279"
+        rx="4"
+        fill="#182029"
+        stroke="#47545f"
+      />
+      {[105, 192, 279].map((y) => (
+        <Fan key={y} x={305} y={y} r={21} />
       ))}
-      <g
-        className={
-          has("mb-amd") || has("mb-intel") ? "installed" : "uninstalled"
-        }
-      >
+      <path d="M281 149h49m-49 87h49" stroke="#3b4854" />
+      <g {...group("mb-amd", has("mb-amd") || has("mb-intel"))}>
         <rect
-          x="50"
-          y="51"
-          width="113"
-          height="154"
-          rx="3"
-          fill="#3b434a"
-          stroke="#7e8a91"
-          strokeDasharray={has("mb-amd") || has("mb-intel") ? "0" : "4 4"}
+          x="68"
+          y="73"
+          width="181"
+          height="167"
+          rx="4"
+          fill="#374653"
+          stroke="#8a9ba6"
         />
-        <path d="M58 65h25v59H58m57-58h27v114h-27" fill="#59656e" />
+        <rect x="75" y="82" width="22" height="86" rx="2" fill="#616d79" />
+        <path d="M107 81h57v12h-57m-5 135h126v8H102" fill="#75828c" />
+        {[178, 193, 208, 223].map((x) => (
+          <rect
+            key={x}
+            x={x}
+            y="86"
+            width="5"
+            height="79"
+            rx="1"
+            fill="#17232d"
+          />
+        ))}
       </g>
-      <g className={has("cpu") ? "installed" : "uninstalled"}>
+      <g {...group("cpu")}>
         <rect
-          x="88"
-          y="79"
-          width="37"
-          height="39"
+          x="108"
+          y="102"
+          width="53"
+          height="51"
           rx="3"
-          fill="#dcae91"
-          stroke="#ebd9ca"
+          fill="#bfc4c4"
+          stroke="#f2eeea"
         />
-        <text x="106" y="102" textAnchor="middle" fill="#3b3533" fontSize="9">
+        <rect x="114" y="108" width="41" height="39" rx="2" fill="#e3d7c8" />
+        <text
+          x="134"
+          y="132"
+          textAnchor="middle"
+          fontSize="11"
+          fill="#4a443d"
+          fontFamily="Arial"
+        >
           CPU
         </text>
       </g>
-      <g className={has("ram") ? "installed" : "uninstalled"}>
-        <rect x="137" y="72" width="5" height="67" rx="2" fill="#d8ac88" />
-        <rect x="147" y="72" width="5" height="67" rx="2" fill="#d8ac88" />
+      <g {...group("ram")}>
+        <rect x="193" y="89" width="8" height="76" rx="2" fill="#bd987d" />
+        <rect x="223" y="89" width="8" height="76" rx="2" fill="#bd987d" />
+        <path d="M196 96v53m30-53v53" stroke="#f1d7b8" strokeWidth="2" />
       </g>
-      <g className={has("gpu") ? "installed" : "uninstalled"}>
+      <g {...group("ssd")}>
         <rect
-          x="43"
-          y="156"
-          width="132"
-          height="29"
-          rx="3"
-          fill="#666e78"
-          stroke="#bdc5cd"
+          x="106"
+          y="171"
+          width="83"
+          height="12"
+          rx="2"
+          fill="#a18e6a"
+          stroke="#d6c9aa"
         />
-        <text x="108" y="175" fill="#e4dbd5" fontSize="9" textAnchor="middle">
-          GEFORCE RTX
+        <text x="147" y="180" textAnchor="middle" fontSize="7" fill="#222a2d">
+          NVMe SSD
         </text>
       </g>
-      <g className={has("psu") ? "installed" : "uninstalled"}>
-        <path d="m39 222 97-8v34l-97 9Z" fill="#58616c" stroke="#a2acb8" />
-        <text x="89" y="239" fill="#ebe3da" fontSize="9" textAnchor="middle">
+      <g {...group("gpu")}>
+        <rect
+          x="64"
+          y="198"
+          width="194"
+          height="40"
+          rx="4"
+          fill="#536271"
+          stroke="#a9b6c2"
+        />
+        <rect x="70" y="203" width="182" height="29" rx="2" fill="#2c3946" />
+        <Fan x={95} y={218} r={12} />
+        <Fan x={134} y={218} r={12} />
+        <text x="203" y="222" fontSize="10" textAnchor="middle" fill="#d3d9dd">
+          GPU
+        </text>
+        <path d="M76 242h100" stroke="#c6af81" strokeWidth="3" />
+      </g>
+      {airActive && (
+        <g {...group("cooler", true)}>
+          <rect
+            x="101"
+            y="95"
+            width="68"
+            height="66"
+            rx="4"
+            fill="#6c7985"
+            stroke="#a6b0b8"
+          />
+          <Fan x={135} y={128} r={27} />
+        </g>
+      )}
+      {liquidActive && (
+        <g {...group("liquid", true)}>
+          <rect x="68" y="59" width="173" height="12" rx="3" fill="#88939c" />
+          <circle
+            cx="135"
+            cy="127"
+            r="22"
+            fill="#293844"
+            stroke="#ccab92"
+            strokeWidth="3"
+          />
+          <path
+            d="M149 112V88q0-10 10-10h45q9 0 9-9m-49 57V97q0-9 9-9h48q10 0 10-17"
+            stroke="#667987"
+            fill="none"
+            strokeWidth="5"
+            strokeLinecap="round"
+          />
+        </g>
+      )}
+      <rect
+        x="51"
+        y="256"
+        width="220"
+        height="78"
+        fill="#242f39"
+        stroke="#495863"
+      />
+      <g {...group("psu")}>
+        <rect
+          x="63"
+          y="269"
+          width="103"
+          height="52"
+          rx="4"
+          fill="#53616e"
+          stroke="#a9b4bd"
+        />
+        <Fan x={91} y={295} r={17} />
+        <text x="137" y="299" textAnchor="middle" fontSize="11" fill="#e1e2dd">
           PSU
         </text>
+        <path
+          d="M168 289h33q10 0 10-12v-30m-43 55h48q13 0 13-15v-37"
+          fill="none"
+          stroke="#657988"
+          strokeWidth="3"
+        />
       </g>
-      <g
-        className={has("cooler") || has("liquid") ? "installed" : "uninstalled"}
+      <path
+        d="M186 277h64m-64 9h64m-64 9h64m-64 9h64"
+        stroke="#3f4d59"
+        strokeWidth="2"
+      />
+      <rect
+        x="50"
+        y="56"
+        width="222"
+        height="279"
+        rx="5"
+        fill="none"
+        stroke="#7e8c98"
+        strokeWidth="1.1"
+      />
+      {[59, 264].flatMap((x) =>
+        [65, 327].map((y) => (
+          <circle key={x + "-" + y} cx={x} cy={y} r="2" fill="#a2a9ad" />
+        )),
+      )}
+      <text
+        x="64"
+        y="348"
+        fill="#8f9ba5"
+        fontSize="8"
+        fontFamily="Arial"
+        letterSpacing="2"
       >
-        <Fan x={106} y={98} r={25} />
-      </g>
-      <g className={has("ssd") ? "installed" : "uninstalled"}>
-        <rect x="87" y="135" width="42" height="8" fill="#baa37f" />
-      </g>
-      <path d="m43 273 1 14m159-12v10" stroke="#393e45" strokeWidth="8" />
-      <circle cx="211" cy="49" r="2" fill="#d79b83" />
+        SHOHSTORE / ATX
+      </text>
+    </svg>
+  );
+}
+function PeripheralArt({
+  category,
+  title,
+  className,
+  product,
+}: {
+  category: Category;
+  title: string;
+  className: string;
+  product?: Product;
+}) {
+  const model = product?.id || "";
+  const brand = product?.brand || "";
+  const accent =
+    brand === "Razer"
+      ? "#83987b"
+      : brand === "HyperX"
+        ? "#c0987f"
+        : brand === "ASUS"
+          ? "#9ba2ab"
+          : "#b39c85";
+  const mousePath = model.includes("g502")
+    ? "M151 31c-35 3-49 34-54 65l-20 47 12 34 29 12c12 16 32 23 52 19 36-7 50-35 50-73V99c-1-45-25-73-69-68Z"
+    : model.includes("deathadder")
+      ? "M143 31c-42 3-58 39-57 84l4 34c5 43 34 62 74 58 43-5 64-35 57-77l-7-38c-7-43-31-65-71-61Z"
+      : model.includes("viper")
+        ? "M159 40c-32 0-55 29-57 70l-3 40c-1 31 23 51 60 51s61-20 60-51l-3-40c-2-41-25-70-57-70Z"
+        : "M160 30c-43 0-64 39-64 87v21c0 43 24 67 64 67s64-24 64-67v-21c0-48-21-87-64-87Z";
+  const full = product?.specs["Form factor"]?.startsWith("Full");
+  const lightKeys = model.includes("keychron");
+  return (
+    <svg
+      viewBox="0 0 320 230"
+      className={"product-art " + className}
+      role="img"
+      aria-label={title}
+    >
+      {category === "mouse" ? (
+        <g>
+          <path d={mousePath} fill="#353e47" stroke="#78838b" strokeWidth="2" />
+          <path
+            d="M160 34v72m-62 13h124"
+            fill="none"
+            stroke="#84929c"
+            strokeWidth="1.3"
+          />
+          <rect x="153" y="58" width="14" height="31" rx="6" fill={accent} />
+          {[0, 1, ...(model.includes("g502") ? [2, 3] : [])].map((i) => (
+            <rect
+              key={i}
+              x={108 + i * 5}
+              y={126 + (i % 2) * 8}
+              width="3"
+              height="17"
+              rx="1"
+              fill="#8b999f"
+            />
+          ))}
+          <path
+            d="M146 171h28"
+            stroke={accent}
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+          {model.includes("gpro") && (
+            <path
+              d="M208 123v20m6-20v20"
+              stroke="#89979f"
+              strokeWidth="3"
+              strokeLinecap="round"
+            />
+          )}
+        </g>
+      ) : category === "keyboard" ? (
+        <g>
+          <rect
+            x={full ? 10 : 25}
+            y="64"
+            width={full ? 300 : 270}
+            height="123"
+            rx="8"
+            fill="#303943"
+            stroke="#77838d"
+            strokeWidth="2"
+          />
+          {Array.from({ length: 5 }, (_, r) =>
+            Array.from({ length: full ? 12 : 14 }, (_, c) => (
+              <rect
+                key={r + "-" + c}
+                x={(full ? 20 : 36) + c * (full ? 17 : 17.5)}
+                y={76 + r * 20}
+                width="13"
+                height="15"
+                rx="2"
+                fill={
+                  lightKeys
+                    ? r === 0
+                      ? "#7b817d"
+                      : "#b9b8ae"
+                    : r === 4 && c > 3 && c < 9
+                      ? accent
+                      : "#55636f"
+                }
+                stroke="#849099"
+                strokeWidth=".5"
+              />
+            )),
+          )}
+          {full &&
+            Array.from({ length: 5 }, (_, r) =>
+              Array.from({ length: 4 }, (_, c) => (
+                <rect
+                  key={r + "-" + c}
+                  x={231 + c * 17.5}
+                  y={76 + r * 20}
+                  width="13"
+                  height="15"
+                  rx="2"
+                  fill={r === 0 ? accent : "#55636f"}
+                  stroke="#849099"
+                  strokeWidth=".5"
+                />
+              )),
+            )}
+          <path
+            d="M275 65V48q0-12-12-12h-46"
+            stroke="#747e85"
+            fill="none"
+            strokeWidth="3"
+          />
+        </g>
+      ) : (
+        <g>
+          <path
+            d="M88 119V96c0-88 144-88 144 0v23"
+            fill="none"
+            stroke={model.includes("g435") ? "#929fa5" : "#333f4b"}
+            strokeWidth={model.includes("nova") ? 17 : 24}
+            strokeLinecap="round"
+          />
+          <path
+            d="M88 112V96c0-74 144-74 144 0v16"
+            fill="none"
+            stroke="#8c999f"
+            strokeWidth="4"
+          />
+          <rect
+            x="71"
+            y="101"
+            width="43"
+            height="91"
+            rx={model.includes("blackshark") ? 11 : 19}
+            fill="#394652"
+            stroke="#818e98"
+            strokeWidth="2"
+          />
+          <rect
+            x="206"
+            y="101"
+            width="43"
+            height="91"
+            rx={model.includes("blackshark") ? 11 : 19}
+            fill="#394652"
+            stroke="#818e98"
+            strokeWidth="2"
+          />
+          <rect x="88" y="113" width="23" height="65" rx="11" fill={accent} />
+          <rect x="209" y="113" width="23" height="65" rx="11" fill={accent} />
+          {!model.includes("g435") && (
+            <>
+              <path
+                d="M82 166v30q0 13 14 13h37"
+                fill="none"
+                stroke="#71818e"
+                strokeWidth="6"
+                strokeLinecap="round"
+              />
+              <rect
+                x="125"
+                y="203"
+                width="24"
+                height="11"
+                rx="5"
+                fill="#3a4751"
+              />
+            </>
+          )}
+        </g>
+      )}
     </svg>
   );
 }

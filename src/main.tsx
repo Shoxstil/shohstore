@@ -45,6 +45,8 @@ import {
   Copy,
   Eye,
   EyeOff,
+  MousePointer2,
+  Keyboard,
 } from "lucide-react";
 import { dictionaries, type Lang, type TranslationKey } from "./i18n";
 import {
@@ -59,6 +61,8 @@ import {
 } from "./types";
 import { Logo, ProductArt, PCVisual } from "./Art";
 import "./styles.css";
+import "./layout.css";
+import { specLabel, specValue } from "./specs";
 import {
   standalone,
   currentRoute,
@@ -80,6 +84,9 @@ const categoryIcons: Record<Category, typeof Cpu> = {
   cooler: Wind,
   case: Box,
   build: Monitor,
+  mouse: MousePointer2,
+  keyboard: Keyboard,
+  headset: Headphones,
 };
 const initialCart = () => {
   const value = readLocal<unknown>("shoh-cart", []);
@@ -108,10 +115,12 @@ function App() {
   const [products, setProducts] = useState<Product[]>([]),
     [loading, setLoading] = useState(true),
     [loadError, setLoadError] = useState("");
-  const [category, setCategory] = useState<Category | "all">("all"),
-    [search, setSearch] = useState(""),
+  const [search, setSearch] = useState(
+      () =>
+        new URLSearchParams(currentRoute().split("?")[1] || "").get("q") || "",
+    ),
     [sort, setSort] = useState("featured"),
-    [expanded, setExpanded] = useState(false);
+    [visibleCount, setVisibleCount] = useState(24);
   const [cart, setCart] = useState<CartItem[]>(initialCart),
     [favorites, setFavorites] = useState<string[]>(() =>
       (() => {
@@ -129,8 +138,7 @@ function App() {
       "cart" | "auth" | "account" | "checkout" | "orders" | null
     >(null),
     [authTab, setAuthTab] = useState<"login" | "register">("login");
-  const [catalogOpen, setCatalogOpen] = useState(false),
-    [mobileNav, setMobileNav] = useState(false),
+  const [mobileNav, setMobileNav] = useState(false),
     [info, setInfo] = useState<"delivery" | "warranty" | "contact" | null>(
       null,
     );
@@ -140,6 +148,16 @@ function App() {
       id: string;
       total: number;
     } | null>(null);
+  const isCatalog = path.split("?")[0] === "/catalog";
+  const routeParams = new URLSearchParams(path.split("?")[1] || "");
+  const categoryParam = routeParams.get("category");
+  const category: Category | "all" = categories.includes(
+    categoryParam as Category,
+  )
+    ? (categoryParam as Category)
+    : "all";
+  const [pageChanging, setPageChanging] = useState(false);
+  const transitionTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const searchRef = useRef<HTMLInputElement>(null),
     syncing = useRef(false),
     cartUser = useRef<number | null>(null),
@@ -155,8 +173,13 @@ function App() {
   }, [theme]);
   useEffect(() => {
     const fn = () => {
-      setPath(currentRoute());
-      window.scrollTo(0, 0);
+      if (transitionTimer.current) clearTimeout(transitionTimer.current);
+      const next = currentRoute();
+      setPath(next);
+      setPageChanging(false);
+      setSearch(new URLSearchParams(next.split("?")[1] || "").get("q") || "");
+      setVisibleCount(24);
+      window.scrollTo({ top: 0, behavior: "instant" });
     };
     window.addEventListener("popstate", fn);
     window.addEventListener("hashchange", fn);
@@ -171,13 +194,60 @@ function App() {
       return () => clearTimeout(timer);
     }
   }, [toast]);
-  const navigate = (next: string) => {
-    if (currentRoute() !== next) history.pushState({}, "", routeHref(next));
-    setPath(next);
-    window.scrollTo({ top: 0, behavior: "auto" });
+  useEffect(
+    () => () => {
+      if (transitionTimer.current) clearTimeout(transitionTimer.current);
+    },
+    [],
+  );
+  const navigate = (
+    next: string,
+    options: { scroll?: boolean; replace?: boolean } = {},
+  ) => {
+    if (transitionTimer.current) clearTimeout(transitionTimer.current);
     setMobileNav(false);
-    setCatalogOpen(false);
+    const apply = () => {
+      if (currentRoute() !== next)
+        history[options.replace ? "replaceState" : "pushState"](
+          {},
+          "",
+          routeHref(next),
+        );
+      setPath(next);
+      setVisibleCount(24);
+      if (options.scroll !== false)
+        window.scrollTo({
+          top: 0,
+          behavior:
+            path.split("?")[0] === next.split("?")[0] &&
+            !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+              ? "smooth"
+              : "instant",
+        });
+      requestAnimationFrame(() => setPageChanging(false));
+    };
+    if (
+      path.split("?")[0] !== next.split("?")[0] &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      setPageChanging(true);
+      transitionTimer.current = setTimeout(apply, 170);
+    } else {
+      setPageChanging(false);
+      apply();
+    }
   };
+  function searchCatalog(value: string) {
+    setSearch(value);
+    setFavoritesOnly(false);
+    const params = new URLSearchParams();
+    if (isCatalog && category !== "all") params.set("category", category);
+    if (value.trim()) params.set("q", value.trim());
+    navigate("/catalog" + (params.toString() ? "?" + params.toString() : ""), {
+      scroll: !isCatalog,
+      replace: isCatalog,
+    });
+  }
   const notify = (s: string) => setToast(s);
   async function fetchProducts() {
     setLoading(true);
@@ -302,7 +372,6 @@ function App() {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        setCatalogOpen(false);
         setMobileNav(false);
       }
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -323,10 +392,12 @@ function App() {
         ? selectedProduct.name + " — "
         : isAdmin
           ? t("admin") + " — "
-          : "") +
+          : isCatalog
+            ? (category === "all" ? t("catalog") : t(category)) + " — "
+            : "") +
       "Shohstore" +
-      (!selectedProduct && !isAdmin ? " — " + t("tagline") : "");
-  }, [selectedProduct?.id, isAdmin, lang]);
+      (!selectedProduct && !isAdmin && !isCatalog ? " — " + t("tagline") : "");
+  }, [selectedProduct?.id, isAdmin, isCatalog, category, lang]);
   const itemRows = cart
     .map((i) => ({ ...i, product: products.find((p) => p.id === i.id) }))
     .filter((i): i is CartItem & { product: Product } => !!i.product);
@@ -334,8 +405,25 @@ function App() {
     count = itemRows.reduce((s, i) => s + i.qty, 0);
   const cpu = itemRows.find((i) => i.product.category === "cpu")?.product,
     mb = itemRows.find((i) => i.product.category.startsWith("mb-"))?.product;
+  const installedVisual: Category[] = itemRows.flatMap((i) =>
+    i.product.category === "build"
+      ? ([
+          "build",
+          /LS520|LS720|Kraken|Liquid|H100i|Pure Loop/i.test(
+            i.product.specs.Cooling || "",
+          )
+            ? "liquid"
+            : "cooler",
+        ] as Category[])
+      : [i.product.category],
+  );
   const socketsKnown = !!cpu?.specs.Socket && !!mb?.specs.Socket;
-  const mismatch = socketsKnown && cpu?.specs.Socket !== mb?.specs.Socket;
+  const socketMismatch = socketsKnown && cpu?.specs.Socket !== mb?.specs.Socket;
+  const ram = itemRows.find((i) => i.product.category === "ram")?.product;
+  const memoryKnown = !!ram?.specs.Type && !!mb?.specs["Memory standard"];
+  const memoryMismatch =
+    memoryKnown && ram?.specs.Type !== mb?.specs["Memory standard"];
+  const mismatch = socketMismatch || memoryMismatch;
   const shown = useMemo(() => {
     let list = products.filter(
       (p) =>
@@ -351,19 +439,10 @@ function App() {
     return list;
   }, [products, category, search, sort, favoritesOnly, favorites, lang]);
   function selectCategory(c: Category | "all") {
-    setCategory(c);
+    setSearch("");
     setFavoritesOnly(false);
-    setExpanded(true);
-    setCatalogOpen(false);
-    setMobileNav(false);
-    if (path !== "/") navigate("/");
-    setTimeout(
-      () =>
-        document
-          .getElementById("products")
-          ?.scrollIntoView({ behavior: "smooth", block: "start" }),
-      50,
-    );
+    setVisibleCount(24);
+    navigate("/catalog" + (c === "all" ? "" : "?category=" + c));
   }
   function toggleFavorite(p: Product) {
     setFavorites((f) =>
@@ -382,13 +461,18 @@ function App() {
       }
       next = next.map((i) => (i.id === p.id ? { ...i, qty: i.qty + 1 } : i));
     } else {
+      const peripheral = (c: Category) =>
+        ["mouse", "keyboard", "headset"].includes(c);
       const hasBuild = itemRows.some((i) => i.product.category === "build");
+      const internal = itemRows.filter((i) => !peripheral(i.product.category));
       if (
-        (p.category === "build" && next.length > 0) ||
-        (hasBuild && p.category !== "build")
+        (p.category === "build" && internal.length > 0) ||
+        (hasBuild && p.category !== "build" && !peripheral(p.category))
       ) {
         if (!window.confirm(t("completePc"))) return;
-        next = [];
+        next = next.filter((i) =>
+          peripheral(products.find((p) => p.id === i.id)!.category),
+        );
       }
       const slot = (c: Category) =>
         c.startsWith("mb-")
@@ -464,21 +548,25 @@ function App() {
       </div>
       <header className="header">
         <div className="container header-inner">
-          <Logo />
+          <Logo
+            onNavigate={() => {
+              setSearch("");
+              navigate("/");
+            }}
+          />
           <button
-            className={"catalog-button " + (catalogOpen ? "is-open" : "")}
-            onClick={() => setCatalogOpen(!catalogOpen)}
-            aria-expanded={catalogOpen}
+            className={"catalog-button " + (isCatalog ? "is-open" : "")}
+            onClick={() => selectCategory("all")}
           >
             <LayoutGrid size={17} />
             <span>{t("catalog")}</span>
-            <ChevronDown size={14} />
+            <ArrowUpRight size={14} />
           </button>
           <form
             className="search"
             onSubmit={(e) => {
               e.preventDefault();
-              selectCategory("all");
+              searchCatalog(search);
             }}
           >
             <Search size={18} />
@@ -486,9 +574,7 @@ function App() {
               ref={searchRef}
               value={search}
               onChange={(e) => {
-                setSearch(e.target.value);
-                setExpanded(true);
-                if (path !== "/") navigate("/");
+                searchCatalog(e.target.value);
               }}
               placeholder={t("search")}
               aria-label={t("search")}
@@ -496,7 +582,7 @@ function App() {
             {search ? (
               <button
                 type="button"
-                onClick={() => setSearch("")}
+                onClick={() => searchCatalog("")}
                 aria-label={t("clear")}
               >
                 <X size={15} />
@@ -579,28 +665,6 @@ function App() {
             </span>
           </div>
         </nav>
-        {catalogOpen && (
-          <>
-            <div
-              className="catalog-scrim"
-              onClick={() => setCatalogOpen(false)}
-            />
-            <div className="container catalog-position">
-              <div className="catalog-dropdown">
-                {categories.map((c) => {
-                  const Icon = categoryIcons[c];
-                  return (
-                    <button key={c} onClick={() => selectCategory(c)}>
-                      <Icon size={19} />
-                      <span>{t(c)}</span>
-                      <ChevronRight size={14} />
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </>
-        )}
         {mobileNav && (
           <div className="mobile-nav">
             {categories.map((c) => (
@@ -615,10 +679,10 @@ function App() {
     </>
   );
 
-  function ProductCard({ p }: { p: Product }) {
+  function renderProductCard(p: Product) {
     const inCart = cart.some((i) => i.id === p.id);
     return (
-      <article className="product-card">
+      <article className="product-card" key={p.id}>
         <div className="product-image">
           <a
             href={routeHref("/product/" + p.id)}
@@ -630,7 +694,13 @@ function App() {
           >
             <ProductArt product={p} />
           </a>
-          {p.badge && <span className={"badge " + p.badge}>{t(p.badge)}</span>}
+          {p.oldPrice && p.oldPrice > p.price ? (
+            <span className="badge sale">
+              −{Math.round((1 - p.price / p.oldPrice) * 100)}%
+            </span>
+          ) : (
+            p.badge && <span className={"badge " + p.badge}>{t(p.badge)}</span>
+          )}
           <button
             className={
               "favorite-button " + (favorites.includes(p.id) ? "active" : "")
@@ -649,6 +719,7 @@ function App() {
           <div className="product-category">{t(p.category)}</div>
           <a
             className="product-name"
+            title={p.name}
             href={routeHref("/product/" + p.id)}
             onClick={(e) => {
               e.preventDefault();
@@ -664,7 +735,7 @@ function App() {
                   !["Socket", "TDP", "Power", "Wireless"].includes(key),
               )
               .slice(0, 3)
-              .map(([, v]) => v)
+              .map(([, v]) => specValue(v, lang))
               .join(" · ")}
           </div>
           <div className={"stock " + (!p.stock ? "none" : "")}>
@@ -694,6 +765,174 @@ function App() {
       </article>
     );
   }
+  const offerIds = [
+    "ryzen-7-7800x3d",
+    "rtx-4060",
+    "corsair-vengeance-32",
+    "samsung-990-evo",
+    "logitech-g502-hero",
+    "hyperx-cloud-ii",
+  ];
+  const discounted = products.filter(
+    (p) => p.oldPrice && p.oldPrice > p.price && p.stock > 0,
+  );
+  const offerProducts = [...discounted]
+    .sort((a, b) => {
+      const ia = offerIds.indexOf(a.id),
+        ib = offerIds.indexOf(b.id);
+      return (ia < 0 ? 999 : ia) - (ib < 0 ? 999 : ib);
+    })
+    .slice(0, 6);
+  const internalSlotCount = new Set(
+    itemRows
+      .filter(
+        (i) => !["mouse", "keyboard", "headset"].includes(i.product.category),
+      )
+      .flatMap((i) =>
+        i.product.category === "build"
+          ? ["cpu", "gpu", "mb", "ram", "ssd", "psu", "cooling", "case"]
+          : [
+              i.product.category.startsWith("mb-")
+                ? "mb"
+                : ["cooler", "liquid"].includes(i.product.category)
+                  ? "cooling"
+                  : i.product.category,
+            ],
+      ),
+  ).size;
+  const catalogPage = (
+    <main className="container catalog-page" id="main-content" tabIndex={-1}>
+      <div className="breadcrumbs">
+        <button onClick={() => navigate("/")}>{t("home")}</button>
+        <ChevronRight size={14} />
+        <span>{t("catalog")}</span>
+      </div>
+      <div className="catalog-heading">
+        <div className="eyebrow">SHOHSTORE / CATALOG</div>
+        <h1>{category === "all" ? t("catalog") : t(category)}</h1>
+        <p>{t("catalogSubtitle")}</p>
+      </div>
+      <div className="catalog-layout">
+        <aside className="catalog-sidebar">
+          <label className="catalog-mobile-select">
+            {t("category")}
+            <select
+              aria-label={t("category")}
+              value={category}
+              onChange={(e) =>
+                selectCategory(e.target.value as Category | "all")
+              }
+            >
+              <option value="all">{t("all")}</option>
+              {categories.map((c) => (
+                <option key={c} value={c}>
+                  {t(c)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <nav className="catalog-category-list" aria-label={t("category")}>
+            {(["all", ...categories] as const).map((c) => {
+              const Icon = c === "all" ? LayoutGrid : categoryIcons[c];
+              return (
+                <button
+                  key={c}
+                  className={category === c ? "active" : ""}
+                  onClick={() => selectCategory(c)}
+                >
+                  <Icon size={18} />
+                  <span>{t(c)}</span>
+                  <small>
+                    {c === "all"
+                      ? products.length
+                      : products.filter((p) => p.category === c).length}
+                  </small>
+                </button>
+              );
+            })}
+          </nav>
+        </aside>
+        <div className="catalog-results">
+          <div className="catalog-toolbar">
+            <span>
+              {shown.length} {t("found")}
+              {search && <b> · {search}</b>}
+            </span>
+            <div className="filter-actions">
+              <button
+                className={
+                  "icon-button favorites-filter " +
+                  (favoritesOnly ? "selected" : "")
+                }
+                onClick={() => setFavoritesOnly(!favoritesOnly)}
+                aria-label={t("favorites")}
+                aria-pressed={favoritesOnly}
+              >
+                <Heart size={18} />
+              </button>
+              <label className="sort-select">
+                <SlidersHorizontal size={16} />
+                <select
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value)}
+                  aria-label={t("sort")}
+                >
+                  <option value="featured">{t("sort")}</option>
+                  <option value="asc">{t("priceAsc")}</option>
+                  <option value="desc">{t("priceDesc")}</option>
+                </select>
+                <ChevronDown size={14} />
+              </label>
+            </div>
+          </div>
+          {loading ? (
+            <div className="loading-area">
+              <Loader2 className="spin" />
+              {t("loading")}
+            </div>
+          ) : loadError ? (
+            <div className="empty-area">
+              <h2>{t("errorTitle")}</h2>
+              <button className="button secondary" onClick={fetchProducts}>
+                {t("retry")}
+              </button>
+            </div>
+          ) : !shown.length ? (
+            <div className="empty-area">
+              <Search size={32} />
+              <h2>{t(favoritesOnly ? "noFavorites" : "emptySearch")}</h2>
+              <p>{t("emptySearchDesc")}</p>
+              <button
+                className="button secondary"
+                onClick={() => selectCategory("all")}
+              >
+                {t("reset")}
+              </button>
+            </div>
+          ) : (
+            <>
+              <div
+                className="product-grid catalog-grid"
+                key={category + "-" + favoritesOnly}
+              >
+                {shown.slice(0, visibleCount).map((p) => renderProductCard(p))}
+              </div>
+              {visibleCount < shown.length && (
+                <button
+                  className="show-all-button"
+                  onClick={() => setVisibleCount((n) => n + 24)}
+                >
+                  {t("loadMore")}
+                  <Plus size={18} />
+                  <span>{shown.length - visibleCount}</span>
+                </button>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </main>
+  );
   const home = (
     <main id="main-content" tabIndex={-1}>
       <section className="container hero-section">
@@ -741,20 +980,16 @@ function App() {
             </div>
           </div>
           <div className="hero-visual">
-            <img
-              src={
-                standalone ? window.__SHOHSTORE_HERO__ : "/images/hero-pc.webp"
-              }
-              alt="Shohstore PRO — компьютер с прозрачным корпусом и мягкой подсветкой"
-              fetchPriority="high"
-              width="1024"
-              height="683"
-              onError={(e) => (e.currentTarget.style.opacity = "0")}
-            />
+            <div className="hero-pc-art">
+              <PCVisual
+                installed={["build", "liquid"]}
+                title={t("heroModel")}
+              />
+            </div>
             <span className="hero-orbit orbit-one" />
             <span className="hero-orbit orbit-two" />
             <div className="hero-number">
-              01 <span>/ 03</span>
+              PRO <span>EDITION</span>
             </div>
             <div className="hero-product-label">
               <span>
@@ -799,74 +1034,20 @@ function App() {
           );
         })}
       </section>
-      <section className="container products-section" id="products">
+      <section className="container home-offers" id="offers">
         <div className="section-heading">
           <div>
-            <div className="eyebrow">{t("selection")}</div>
-            <h2>{favoritesOnly ? t("favorites") : t("popular")}</h2>
-            <p>{t("popularSub")}</p>
+            <div className="eyebrow">{t("offersEyebrow")}</div>
+            <h2>{t("offersTitle")}</h2>
+            <p>{t("offersSubtitle")}</p>
           </div>
           <button
             className="text-button all-components"
-            onClick={() => {
-              setCategory("all");
-              setExpanded(true);
-              setSearch("");
-              setFavoritesOnly(false);
-            }}
+            onClick={() => selectCategory("all")}
           >
-            {t("allProducts")}
-            <ArrowUpRight size={17} />
+            {t("catalog")}
+            <ArrowUpRight size={18} />
           </button>
-        </div>
-        <div className="filters-row">
-          <div className="category-tabs">
-            {(["all", "cpu", "gpu", "mb-amd", "ram", "build"] as const).map(
-              (c) => (
-                <button
-                  className={category === c && !favoritesOnly ? "selected" : ""}
-                  key={c}
-                  onClick={() => {
-                    setCategory(c);
-                    setFavoritesOnly(false);
-                    setExpanded(c !== "all");
-                  }}
-                >
-                  {c === "all" ? <LayoutGrid size={15} /> : null}
-                  {t(c === "mb-amd" ? "mb-amd" : c)}
-                </button>
-              ),
-            )}
-          </div>
-          <div className="filter-actions">
-            <button
-              className={
-                "icon-button favorites-filter " +
-                (favoritesOnly ? "selected" : "")
-              }
-              onClick={() => {
-                setFavoritesOnly(!favoritesOnly);
-                setExpanded(true);
-              }}
-              aria-label={t("favorites")}
-              aria-pressed={favoritesOnly}
-            >
-              <Heart size={17} />
-            </button>
-            <label className="sort-select">
-              <SlidersHorizontal size={15} />
-              <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-                aria-label={t("sort")}
-              >
-                <option value="featured">{t("sort")}</option>
-                <option value="asc">{t("priceAsc")}</option>
-                <option value="desc">{t("priceDesc")}</option>
-              </select>
-              <ChevronDown size={12} />
-            </label>
-          </div>
         </div>
         {loading ? (
           <div className="loading-area">
@@ -875,48 +1056,50 @@ function App() {
           </div>
         ) : loadError ? (
           <div className="empty-area">
-            <AlertCircle size={30} />
-            <h3>{t("errorTitle")}</h3>
-            <p>{t(loadError as TranslationKey) || t("server_error")}</p>
+            <p>{t("errorTitle")}</p>
             <button className="button secondary" onClick={fetchProducts}>
               {t("retry")}
             </button>
           </div>
-        ) : shown.length === 0 ? (
-          <div className="empty-area">
-            <Search size={32} />
-            <h3>{favoritesOnly ? t("noFavorites") : t("emptySearch")}</h3>
-            <p>{t("emptySearchDesc")}</p>
-            <button
-              className="button secondary"
-              onClick={() => {
-                setSearch("");
-                setCategory("all");
-                setFavoritesOnly(false);
-              }}
-            >
-              {t("reset")}
-            </button>
-          </div>
         ) : (
-          <>
-            <div className="product-grid">
-              {shown.slice(0, expanded ? shown.length : 4).map((p) => (
-                <ProductCard key={p.id} p={p} />
-              ))}
-            </div>
-            {!expanded && shown.length > 4 && (
-              <button
-                className="show-all-button"
-                onClick={() => setExpanded(true)}
-              >
-                {t("showAll")}
-                <ArrowRight size={16} />
-                <span>{products.length}</span>
-              </button>
-            )}
-          </>
+          <div className="product-grid offers-grid">
+            {offerProducts.map((p) => renderProductCard(p))}
+          </div>
         )}
+        <button
+          className="show-all-button"
+          onClick={() => selectCategory("all")}
+        >
+          {t("openCatalog")}
+          <ArrowRight size={18} />
+          <span>{products.length}</span>
+        </button>
+      </section>
+      <section className="container peripheral-section">
+        <div className="section-heading">
+          <div>
+            <div className="eyebrow">{t("peripheralEyebrow")}</div>
+            <h2>{t("peripheralTitle")}</h2>
+          </div>
+        </div>
+        <div className="peripheral-links">
+          {(["mouse", "keyboard", "headset"] as Category[]).map((c) => {
+            const Icon = categoryIcons[c];
+            return (
+              <button key={c} onClick={() => selectCategory(c)}>
+                <Icon size={32} strokeWidth={1.4} />
+                <span>
+                  <strong>{t(c)}</strong>
+                  <small>
+                    {products.filter((p) => p.category === c).length}{" "}
+                    {t("found")}
+                  </small>
+                </span>
+                <ArrowUpRight size={20} />
+              </button>
+            );
+          })}
+        </div>
       </section>
       <section className="container builder-section">
         <div className="builder-banner">
@@ -940,15 +1123,24 @@ function App() {
               <span>CPU</span>
               <Check size={12} />
             </div>
-            <PCVisual installed={itemRows.map((i) => i.product.category)} />
+            <PCVisual installed={installedVisual} />
             <div className="floating-component float-gpu">
               <Monitor size={21} />
               <span>GPU</span>
               <Plus size={12} />
             </div>
             <div className="builder-progress">
-              <span />
-              {String(itemRows.length).padStart(2, "0")} <i>/ 08</i>
+              <span
+                role="progressbar"
+                aria-label={t("parts")}
+                aria-valuemin={0}
+                aria-valuemax={8}
+                aria-valuenow={internalSlotCount}
+                style={{
+                  background: `linear-gradient(90deg,#bbc8b2 ${(internalSlotCount / 8) * 100}%,#72806b ${(internalSlotCount / 8) * 100}%)`,
+                }}
+              />
+              {String(internalSlotCount).padStart(2, "0")} <i>/ 08</i>
             </div>
           </div>
         </div>
@@ -966,7 +1158,10 @@ function App() {
         <ChevronRight size={13} />
         <span>{selectedProduct.name}</span>
       </div>
-      <button className="back-link" onClick={() => navigate("/")}>
+      <button
+        className="back-link"
+        onClick={() => selectCategory(selectedProduct.category)}
+      >
         <ArrowLeft size={16} />
         {t("back")}
       </button>
@@ -1046,26 +1241,28 @@ function App() {
           {Object.entries(selectedProduct.specs).map(([k, v]) => (
             <div key={k}>
               <dt>{specLabel(k, lang)}</dt>
-              <dd>{v}</dd>
+              <dd>{specValue(v, lang)}</dd>
             </div>
           ))}
         </dl>
         <p className="muted">{t("footerNote")}</p>
       </div>
-      <h2 className="related-title">{t("allProducts")}</h2>
+      <h2 className="related-title">{t("relatedProducts")}</h2>
       <div className="product-grid related-grid">
         {products
-          .filter((p) => p.id !== selectedProduct.id)
-          .slice(0, 4)
-          .map((p) => (
-            <ProductCard key={p.id} p={p} />
-          ))}
+          .filter(
+            (p) =>
+              p.id !== selectedProduct.id &&
+              p.category === selectedProduct.category,
+          )
+          .slice(0, 3)
+          .map((p) => renderProductCard(p))}
       </div>
     </main>
   ) : (
     <div className="container empty-area">
       <h2>{t("emptySearch")}</h2>
-      <button className="button primary" onClick={() => navigate("/")}>
+      <button className="button primary" onClick={() => selectCategory("all")}>
         {t("back")}
       </button>
     </div>
@@ -1075,7 +1272,13 @@ function App() {
     <footer className="footer">
       <div className="container footer-main">
         <div className="footer-brand">
-          <Logo small />
+          <Logo
+            small
+            onNavigate={() => {
+              setSearch("");
+              navigate("/");
+            }}
+          />
           <p>{t("footerDesc")}</p>
           <span className="footer-location">
             <MapPin size={14} />
@@ -1152,28 +1355,32 @@ function App() {
           </details>
         </div>
       )}
-      {isAdmin ? (
-        <AdminPanel
-          user={user}
-          products={products}
-          lang={lang}
-          t={t}
-          onUpdate={fetchProducts}
-          notify={notify}
-          onLogin={() => setPanel("auth")}
-        />
-      ) : path.startsWith("/product/") ? (
-        loading ? (
-          <div className="loading-area">
-            <Loader2 className="spin" />
-            {t("loading")}
-          </div>
+      <div className={"page-shell " + (pageChanging ? "leaving" : "")}>
+        {isAdmin ? (
+          <AdminPanel
+            user={user}
+            products={products}
+            lang={lang}
+            t={t}
+            onUpdate={fetchProducts}
+            notify={notify}
+            onLogin={() => setPanel("auth")}
+          />
+        ) : path.startsWith("/product/") ? (
+          loading ? (
+            <div className="loading-area">
+              <Loader2 className="spin" />
+              {t("loading")}
+            </div>
+          ) : (
+            productPage
+          )
+        ) : isCatalog ? (
+          catalogPage
         ) : (
-          productPage
-        )
-      ) : (
-        home
-      )}
+          home
+        )}
+      </div>
       {footer}
       {panel && (
         <div
@@ -1220,9 +1427,7 @@ function App() {
                   </h2>
                 </div>
                 <div className="cart-visual">
-                  <PCVisual
-                    installed={itemRows.map((i) => i.product.category)}
-                  />
+                  <PCVisual installed={installedVisual} />
                   <div className="cart-slots">
                     {(
                       [
@@ -1271,6 +1476,30 @@ function App() {
                     })}
                   </div>
                 </div>
+                <div className="cart-peripherals">
+                  <span>{t("peripherals")}</span>
+                  {(["mouse", "keyboard", "headset"] as Category[]).map((c) => {
+                    const Icon = categoryIcons[c];
+                    const active = itemRows.some(
+                      (i) => i.product.category === c,
+                    );
+                    return (
+                      <button
+                        key={c}
+                        className={active ? "filled" : ""}
+                        onClick={() => {
+                          setPanel(null);
+                          selectCategory(c);
+                        }}
+                        aria-label={t(c)}
+                      >
+                        <Icon size={18} />
+                        {active ? <Check size={12} /> : <Plus size={12} />}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="diagram-caption">{t("visualDiagram")}</p>
                 {itemRows.length ? (
                   <>
                     <div className="cart-items">
@@ -1327,7 +1556,7 @@ function App() {
                         </div>
                       ))}
                     </div>
-                    {socketsKnown && (
+                    {(socketsKnown || memoryKnown) && (
                       <div
                         className={
                           "compatibility " + (mismatch ? "warning" : "good")
@@ -1339,7 +1568,15 @@ function App() {
                           <CheckCircle2 size={17} />
                         )}
                         <span>
-                          {t(mismatch ? "incompatible" : "compatible")}
+                          {t(
+                            socketMismatch
+                              ? "incompatible"
+                              : memoryMismatch
+                                ? "incompatible_memory"
+                                : socketsKnown
+                                  ? "compatible"
+                                  : "memoryCompatible",
+                          )}
                         </span>
                       </div>
                     )}
@@ -1894,6 +2131,8 @@ function AdminPanel({
         name: f.get("name"),
         category: f.get("category"),
         price: Number(f.get("price")),
+        ...(f.get("oldPrice") ? { oldPrice: Number(f.get("oldPrice")) } : {}),
+        badge: f.get("badge") || undefined,
         stock: Number(f.get("stock")),
         brand: f.get("brand"),
         image: f.get("image"),
@@ -2004,6 +2243,26 @@ function AdminPanel({
               />
             </label>
             <label>
+              {t("oldPrice")}
+              <input
+                type="number"
+                name="oldPrice"
+                min="1"
+                step="1"
+                defaultValue={item?.oldPrice}
+              />
+              <small>{t("oldPriceHint")}</small>
+            </label>
+            <label>
+              {t("productBadge")}
+              <select name="badge" defaultValue={item?.badge || ""}>
+                <option value="">{t("noBadge")}</option>
+                <option value="new">{t("new")}</option>
+                <option value="choice">{t("choice")}</option>
+                <option value="bestseller">{t("bestseller")}</option>
+              </select>
+            </label>
+            <label>
               {t("brand")}
               <input name="brand" defaultValue={item?.brand} maxLength={40} />
             </label>
@@ -2100,35 +2359,6 @@ function AdminPanel({
       </div>
     </main>
   );
-}
-function specLabel(k: string, l: Lang) {
-  const labels: Record<string, Record<Lang, string>> = {
-    Socket: { ru: "Сокет", uz: "Soket", en: "Socket" },
-    Cores: { ru: "Количество ядер", uz: "Yadrolar soni", en: "Cores" },
-    Threads: { ru: "Количество потоков", uz: "Oqimlar soni", en: "Threads" },
-    "Base clock": {
-      ru: "Базовая частота",
-      uz: "Asosiy chastota",
-      en: "Base clock",
-    },
-    "Boost clock": {
-      ru: "Частота в турбо",
-      uz: "Turbo chastota",
-      en: "Boost clock",
-    },
-    Memory: { ru: "Память", uz: "Xotira", en: "Memory" },
-    "Memory bus": { ru: "Шина памяти", uz: "Xotira shinasi", en: "Memory bus" },
-    Power: { ru: "Мощность", uz: "Quvvat", en: "Power" },
-    Chipset: { ru: "Чипсет", uz: "Chipset", en: "Chipset" },
-    "Form factor": { ru: "Форм-фактор", uz: "Shakl omili", en: "Form factor" },
-    Type: { ru: "Тип", uz: "Turi", en: "Type" },
-    Frequency: { ru: "Частота", uz: "Chastota", en: "Frequency" },
-    Capacity: { ru: "Объём", uz: "Hajm", en: "Capacity" },
-    Processor: { ru: "Процессор", uz: "Protsessor", en: "Processor" },
-    Graphics: { ru: "Видеокарта", uz: "Videokarta", en: "Graphics" },
-    Storage: { ru: "Накопитель", uz: "Xotira qurilmasi", en: "Storage" },
-  };
-  return labels[k]?.[l] || k;
 }
 function LaunchInstructions({ t }: { t: Translator }) {
   return (

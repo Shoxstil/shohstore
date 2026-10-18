@@ -71,7 +71,7 @@ test("database health and complete seeded catalog", async () => {
   assert.equal(health.data.database, "sqlite");
   const r = await request("/products");
   assert.equal(r.status, 200);
-  assert.equal(r.data.products.length, 15);
+  assert.equal(r.data.products.length, 84);
   assert.equal(
     r.data.products.find((p) => p.id === "ryzen-7-7800x3d").specs.Socket,
     "AM5",
@@ -226,6 +226,58 @@ test("incompatible CPU and board cannot be ordered", async () => {
   });
   assert.equal(r.status, 400);
   assert.equal(r.data.error, "incompatible_socket");
+});
+test("DDR4 memory cannot be ordered as a DDR5 motherboard build", async () => {
+  const r = await request("/orders", {
+    method: "POST",
+    cookie: customerCookie,
+    body: {
+      phone: "+998901234567",
+      items: [
+        { id: "asus-tuf-b650", qty: 1 },
+        { id: "corsair-lpx-16", qty: 1 },
+      ],
+    },
+  });
+  assert.equal(r.status, 400);
+  assert.equal(r.data.error, "incompatible_memory");
+});
+test("new peripheral categories and genuine sale prices are supported in admin CRUD", async () => {
+  for (const category of ["mouse", "keyboard", "headset"]) {
+    const product = {
+      name: "API " + category,
+      category,
+      price: 450000,
+      oldPrice: 550000,
+      stock: 2,
+      description: {
+        ru: "Подробное описание",
+        en: "Detailed description",
+        uz: "Batafsil tavsif",
+      },
+      specs: { Connection: "USB" },
+      badge: "new",
+    };
+    let r = await request("/admin/products", {
+      method: "POST",
+      cookie: adminCookie,
+      body: product,
+    });
+    assert.equal(r.status, 201);
+    assert.equal(r.data.product.oldPrice, 550000);
+    const id = r.data.product.id;
+    r = await request("/admin/products/" + id, {
+      method: "PUT",
+      cookie: adminCookie,
+      body: { ...product, oldPrice: 300000 },
+    });
+    assert.equal(r.status, 400);
+    r = await request("/admin/products/" + id, {
+      method: "DELETE",
+      cookie: adminCookie,
+    });
+    assert.equal(r.status, 200);
+  }
 });
 test("checkout uses server prices, saves order, updates stock and empties cart", async () => {
   let r = await request("/orders", {

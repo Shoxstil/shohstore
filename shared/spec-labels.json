@@ -1,0 +1,418 @@
+{
+  "Socket": {
+    "ru": "Сокет",
+    "uz": "Soket"
+  },
+  "Cores": {
+    "ru": "Количество ядер",
+    "uz": "Yadrolar soni"
+  },
+  "Threads": {
+    "ru": "Количество потоков",
+    "uz": "Oqimlar soni"
+  },
+  "Base clock": {
+    "ru": "Базовая частота",
+    "uz": "Asosiy chastota"
+  },
+  "Boost clock": {
+    "ru": "Максимальная частота",
+    "uz": "Maksimal chastota"
+  },
+  "L3 cache": {
+    "ru": "Кэш L3",
+    "uz": "L3 kesh"
+  },
+  "Architecture": {
+    "ru": "Архитектура",
+    "uz": "Arxitektura"
+  },
+  "Memory support": {
+    "ru": "Поддержка памяти",
+    "uz": "Xotira qo‘llovi"
+  },
+  "Memory channels": {
+    "ru": "Каналы памяти",
+    "uz": "Xotira kanallari"
+  },
+  "Integrated graphics": {
+    "ru": "Встроенная графика",
+    "uz": "Ichki grafika"
+  },
+  "Memory": {
+    "ru": "Память",
+    "uz": "Xotira"
+  },
+  "Memory bus": {
+    "ru": "Шина памяти",
+    "uz": "Xotira shinasi"
+  },
+  "Shader processors": {
+    "ru": "Вычислительные блоки",
+    "uz": "Hisoblash bloklari"
+  },
+  "Memory data rate": {
+    "ru": "Скорость памяти",
+    "uz": "Xotira tezligi"
+  },
+  "Power": {
+    "ru": "Мощность",
+    "uz": "Quvvat"
+  },
+  "Recommended PSU": {
+    "ru": "Рекомендуемый БП",
+    "uz": "Tavsiya etilgan quvvat bloki"
+  },
+  "Outputs": {
+    "ru": "Видеовыходы",
+    "uz": "Video chiqishlar"
+  },
+  "Power connectors": {
+    "ru": "Разъёмы питания",
+    "uz": "Quvvat ulagichlari"
+  },
+  "Ray tracing": {
+    "ru": "Трассировка лучей",
+    "uz": "Ray tracing"
+  },
+  "Chipset": {
+    "ru": "Чипсет",
+    "uz": "Chipset"
+  },
+  "Form factor": {
+    "ru": "Форм-фактор",
+    "uz": "Shakli"
+  },
+  "Memory standard": {
+    "ru": "Тип памяти",
+    "uz": "Xotira turi"
+  },
+  "Memory slots": {
+    "ru": "Слоты памяти",
+    "uz": "Xotira uyalari"
+  },
+  "M.2 slots": {
+    "ru": "Разъёмы M.2",
+    "uz": "M.2 uyalari"
+  },
+  "SATA ports": {
+    "ru": "Порты SATA",
+    "uz": "SATA portlari"
+  },
+  "Ethernet": {
+    "ru": "Проводная сеть",
+    "uz": "Simli tarmoq"
+  },
+  "Wireless": {
+    "ru": "Беспроводная связь",
+    "uz": "Simsiz aloqa"
+  },
+  "Display outputs": {
+    "ru": "Выходы встроенной графики",
+    "uz": "Ichki grafika chiqishlari"
+  },
+  "Memory profile": {
+    "ru": "Профили памяти",
+    "uz": "Xotira profillari"
+  },
+  "Type": {
+    "ru": "Тип",
+    "uz": "Turi"
+  },
+  "Frequency": {
+    "ru": "Скорость",
+    "uz": "Tezlik"
+  },
+  "Latency": {
+    "ru": "Задержка",
+    "uz": "Kechikish"
+  },
+  "Voltage": {
+    "ru": "Напряжение",
+    "uz": "Kuchlanish"
+  },
+  "Profile": {
+    "ru": "Профиль",
+    "uz": "Profil"
+  },
+  "Pin count": {
+    "ru": "Контакты",
+    "uz": "Kontaktlar"
+  },
+  "Module count": {
+    "ru": "Модулей в комплекте",
+    "uz": "Modullar soni"
+  },
+  "Lighting": {
+    "ru": "Подсветка",
+    "uz": "Yoritish"
+  },
+  "Part number": {
+    "ru": "Артикул",
+    "uz": "Artikul"
+  },
+  "Capacity": {
+    "ru": "Объём",
+    "uz": "Hajm"
+  },
+  "Interface": {
+    "ru": "Интерфейс",
+    "uz": "Interfeys"
+  },
+  "Protocol": {
+    "ru": "Протокол",
+    "uz": "Protokol"
+  },
+  "Flash": {
+    "ru": "Тип NAND",
+    "uz": "NAND turi"
+  },
+  "Read": {
+    "ru": "Чтение, до",
+    "uz": "O‘qish, gacha"
+  },
+  "Write": {
+    "ru": "Запись, до",
+    "uz": "Yozish, gacha"
+  },
+  "Endurance": {
+    "ru": "Ресурс записи",
+    "uz": "Yozish resursi"
+  },
+  "Warranty": {
+    "ru": "Гарантия производителя",
+    "uz": "Ishlab chiqaruvchi kafolati"
+  },
+  "Heatsink": {
+    "ru": "Радиатор в комплекте",
+    "uz": "Radiator to‘plamda"
+  },
+  "Certification": {
+    "ru": "Сертификация",
+    "uz": "Sertifikat"
+  },
+  "Modularity": {
+    "ru": "Кабели",
+    "uz": "Kabellar"
+  },
+  "Standard": {
+    "ru": "Стандарт",
+    "uz": "Standart"
+  },
+  "Fan size": {
+    "ru": "Диаметр вентилятора",
+    "uz": "Ventilyator diametri"
+  },
+  "Length": {
+    "ru": "Длина",
+    "uz": "Uzunlik"
+  },
+  "Color": {
+    "ru": "Цвет",
+    "uz": "Rang"
+  },
+  "Radiator": {
+    "ru": "Размер радиатора",
+    "uz": "Radiator o‘lchami"
+  },
+  "Fans": {
+    "ru": "Вентиляторы",
+    "uz": "Ventilyatorlar"
+  },
+  "Fan speed": {
+    "ru": "Обороты вентиляторов",
+    "uz": "Ventilyator tezligi"
+  },
+  "Radiator thickness": {
+    "ru": "Толщина радиатора",
+    "uz": "Radiator qalinligi"
+  },
+  "Cold plate": {
+    "ru": "Основание водоблока",
+    "uz": "Sovitish asosi"
+  },
+  "Radiator material": {
+    "ru": "Материал радиатора",
+    "uz": "Radiator materiali"
+  },
+  "Control": {
+    "ru": "Управление",
+    "uz": "Boshqarish"
+  },
+  "Feature": {
+    "ru": "Особенности",
+    "uz": "Xususiyatlar"
+  },
+  "Heatpipes": {
+    "ru": "Тепловые трубки",
+    "uz": "Issiqlik trubkalari"
+  },
+  "Height": {
+    "ru": "Высота",
+    "uz": "Balandlik"
+  },
+  "Materials": {
+    "ru": "Материалы",
+    "uz": "Materiallar"
+  },
+  "Connector": {
+    "ru": "Разъём",
+    "uz": "Ulagich"
+  },
+  "Mounting kit": {
+    "ru": "Крепления",
+    "uz": "Mahkamlash to‘plami"
+  },
+  "GPU clearance": {
+    "ru": "Длина видеокарты, до",
+    "uz": "GPU uzunligi, gacha"
+  },
+  "CPU cooler clearance": {
+    "ru": "Высота кулера, до",
+    "uz": "Kuler balandligi, gacha"
+  },
+  "Included fans": {
+    "ru": "Вентиляторы в комплекте",
+    "uz": "To‘plamdagi ventilyatorlar"
+  },
+  "Front radiator": {
+    "ru": "Радиатор спереди, до",
+    "uz": "Old radiator, gacha"
+  },
+  "Top radiator": {
+    "ru": "Радиатор сверху, до",
+    "uz": "Yuqori radiator, gacha"
+  },
+  "Dimensions": {
+    "ru": "Размеры",
+    "uz": "O‘lchamlar"
+  },
+  "Front I/O": {
+    "ru": "Разъёмы спереди",
+    "uz": "Old ulagichlar"
+  },
+  "Side panel": {
+    "ru": "Боковая панель",
+    "uz": "Yon panel"
+  },
+  "Sensor": {
+    "ru": "Сенсор",
+    "uz": "Sensor"
+  },
+  "Maximum DPI": {
+    "ru": "Разрешение, до",
+    "uz": "DPI, gacha"
+  },
+  "Connection": {
+    "ru": "Подключение",
+    "uz": "Ulanish"
+  },
+  "Buttons": {
+    "ru": "Кнопки",
+    "uz": "Tugmalar"
+  },
+  "Polling rate": {
+    "ru": "Частота опроса",
+    "uz": "So‘rov chastotasi"
+  },
+  "Weight": {
+    "ru": "Масса",
+    "uz": "Og‘irlik"
+  },
+  "Orientation": {
+    "ru": "Для какой руки",
+    "uz": "Qo‘l turi"
+  },
+  "Device type": {
+    "ru": "Тип устройства",
+    "uz": "Qurilma turi"
+  },
+  "Battery life": {
+    "ru": "Автономность",
+    "uz": "Quvvat muddati"
+  },
+  "Keys": {
+    "ru": "Клавиши",
+    "uz": "Tugmalar"
+  },
+  "Switches": {
+    "ru": "Переключатели",
+    "uz": "Tugma mexanizmi"
+  },
+  "Keycaps": {
+    "ru": "Кейкапы",
+    "uz": "Keykaplar"
+  },
+  "Compatibility": {
+    "ru": "Совместимость",
+    "uz": "Moslik"
+  },
+  "Driver size": {
+    "ru": "Диаметр излучателей",
+    "uz": "Drayver diametri"
+  },
+  "Frequency response": {
+    "ru": "Частотный диапазон",
+    "uz": "Chastota diapazoni"
+  },
+  "Microphone": {
+    "ru": "Микрофон",
+    "uz": "Mikrofon"
+  },
+  "Acoustic design": {
+    "ru": "Акустическое оформление",
+    "uz": "Akustik tuzilish"
+  },
+  "Wearing style": {
+    "ru": "Конструкция",
+    "uz": "Tuzilishi"
+  },
+  "Processor": {
+    "ru": "Процессор",
+    "uz": "Protsessor"
+  },
+  "Graphics": {
+    "ru": "Видеокарта",
+    "uz": "Videokarta"
+  },
+  "Motherboard": {
+    "ru": "Материнская плата",
+    "uz": "Ona plata"
+  },
+  "Storage": {
+    "ru": "Накопитель",
+    "uz": "SSD"
+  },
+  "Power supply": {
+    "ru": "Блок питания",
+    "uz": "Quvvat bloki"
+  },
+  "Cooling": {
+    "ru": "Охлаждение",
+    "uz": "Sovitish"
+  },
+  "Case": {
+    "ru": "Корпус",
+    "uz": "Korpus"
+  },
+  "CPU cores": {
+    "ru": "Ядра процессора",
+    "uz": "Protsessor yadrolari"
+  },
+  "CPU threads": {
+    "ru": "Потоки процессора",
+    "uz": "Protsessor oqimlari"
+  },
+  "Video memory": {
+    "ru": "Видеопамять",
+    "uz": "Video xotira"
+  },
+  "Operating system": {
+    "ru": "Операционная система",
+    "uz": "Operatsion tizim"
+  },
+  "Peripherals": {
+    "ru": "Периферия",
+    "uz": "Periferiya"
+  }
+}

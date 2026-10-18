@@ -202,6 +202,13 @@ app.post("/api/orders", auth, (req, res) => {
       cpu.specs.Socket !== mb.specs.Socket
     )
       return res.status(400).json({ error: "incompatible_socket" });
+    const ram = detail.find((i) => i.product.category === "ram")?.product;
+    if (
+      ram?.specs.Type &&
+      mb?.specs["Memory standard"] &&
+      ram.specs.Type !== mb.specs["Memory standard"]
+    )
+      return res.status(400).json({ error: "incompatible_memory" });
     const total = detail.reduce((s, i) => s + i.qty * i.product.price, 0);
     const id = "SH-" + randomBytes(4).toString("hex").toUpperCase();
     db.exec("BEGIN IMMEDIATE");
@@ -258,10 +265,30 @@ const categories = [
   "cooler",
   "case",
   "build",
+  "mouse",
+  "keyboard",
+  "headset",
 ];
 function validateProduct(body, id) {
-  const { name, category, price, stock, description, specs, brand, image } =
-    body;
+  const {
+    name,
+    category,
+    price,
+    stock,
+    description,
+    specs,
+    brand,
+    image,
+    oldPrice,
+    badge,
+  } = body;
+  if (
+    oldPrice != null &&
+    (!Number.isSafeInteger(oldPrice) || oldPrice <= price)
+  )
+    throw Error("invalid_product");
+  if (badge && !["new", "choice", "bestseller"].includes(badge))
+    throw Error("invalid_product");
   if (
     typeof name !== "string" ||
     name.trim().length < 2 ||
@@ -306,6 +333,8 @@ function validateProduct(body, id) {
     description,
     specs,
     brand: String(brand || "").slice(0, 40),
+    ...(oldPrice != null ? { oldPrice } : {}),
+    ...(badge ? { badge } : {}),
     ...(image ? { image } : {}),
   };
 }

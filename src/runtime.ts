@@ -4,7 +4,6 @@ declare global {
   interface Window {
     __SHOHSTORE_STANDALONE__?: boolean;
     __SHOHSTORE_CATALOG__?: Product[];
-    __SHOHSTORE_HERO__?: string;
   }
 }
 
@@ -15,7 +14,7 @@ export function currentRoute(): string {
     ? location.hash.startsWith("#/")
       ? location.hash.slice(1)
       : "/"
-    : location.pathname;
+    : location.pathname + location.search;
 }
 export function readLocal<T>(key: string, fallback: T): T {
   try {
@@ -35,7 +34,7 @@ export function writeLocal(key: string, value: unknown): void {
 }
 export function decodeProductId(path: string): string {
   try {
-    return decodeURIComponent(path.slice("/product/".length));
+    return decodeURIComponent(path.split("?")[0].slice("/product/".length));
   } catch {
     return "";
   }

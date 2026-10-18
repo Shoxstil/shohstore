@@ -1,0 +1,290 @@
+{
+  "No": {
+    "ru": "Нет",
+    "uz": "Yo‘q"
+  },
+  "Yes": {
+    "ru": "Да",
+    "uz": "Ha"
+  },
+  "—": {
+    "ru": "Нет",
+    "uz": "Yo‘q"
+  },
+  "Not installed": {
+    "ru": "Не установлена",
+    "uz": "O‘rnatilmagan"
+  },
+  "Not included": {
+    "ru": "Не входят в комплект",
+    "uz": "To‘plamga kirmaydi"
+  },
+  "Included": {
+    "ru": "В комплекте",
+    "uz": "To‘plamda"
+  },
+  "Black": {
+    "ru": "Чёрный",
+    "uz": "Qora"
+  },
+  "White": {
+    "ru": "Белый",
+    "uz": "Oq"
+  },
+  "Active": {
+    "ru": "Активная",
+    "uz": "Faol"
+  },
+  "Full modular": {
+    "ru": "Полностью модульные",
+    "uz": "To‘liq modulli"
+  },
+  "Non-modular": {
+    "ru": "Несъёмные",
+    "uz": "Ajralmaydigan"
+  },
+  "Single tower": {
+    "ru": "Однобашенный",
+    "uz": "Bir minorali"
+  },
+  "Dual tower": {
+    "ru": "Двухбашенный",
+    "uz": "Ikki minorali"
+  },
+  "Single tower · push-pull": {
+    "ru": "Одна башня · два вентилятора",
+    "uz": "Bir minora · ikkita ventilyator"
+  },
+  "Aluminum fins · copper heatpipes": {
+    "ru": "Алюминиевые рёбра · медные трубки",
+    "uz": "Alyuminiy qanotlar · mis trubkalar"
+  },
+  "Copper": {
+    "ru": "Медь",
+    "uz": "Mis"
+  },
+  "Aluminum": {
+    "ru": "Алюминий",
+    "uz": "Alyuminiy"
+  },
+  "AIO liquid cooling": {
+    "ru": "Жидкостное AIO",
+    "uz": "AIO suvli sovitish"
+  },
+  "Tempered glass": {
+    "ru": "Закалённое стекло",
+    "uz": "Toblangan shisha"
+  },
+  "No · HMB": {
+    "ru": "Нет · используется HMB",
+    "uz": "Yo‘q · HMB ishlatiladi"
+  },
+  "TLC / QLC (revision-dependent)": {
+    "ru": "TLC / QLC — зависит от ревизии",
+    "uz": "TLC / QLC — reviziyaga bog‘liq"
+  },
+  "USB wired": {
+    "ru": "USB, проводное",
+    "uz": "USB, simli"
+  },
+  "USB-C wired · detachable cable": {
+    "ru": "USB-C, съёмный кабель",
+    "uz": "USB-C, olinadigan kabel"
+  },
+  "LIGHTSPEED 2.4 GHz / USB": {
+    "ru": "LIGHTSPEED 2,4 ГГц / USB",
+    "uz": "LIGHTSPEED 2,4 GHz / USB"
+  },
+  "Right-handed": {
+    "ru": "Для правой руки",
+    "uz": "O‘ng qo‘l uchun"
+  },
+  "Ambidextrous": {
+    "ru": "Для правой и левой руки",
+    "uz": "Ikkala qo‘l uchun"
+  },
+  "Optical mouse": {
+    "ru": "Оптическая мышь",
+    "uz": "Optik sichqoncha"
+  },
+  "Up to 60 h without lighting": {
+    "ru": "До 60 ч без подсветки",
+    "uz": "Yoritishsiz 60 soatgacha"
+  },
+  "4–8 (removable side buttons)": {
+    "ru": "4–8, съёмные боковые кнопки",
+    "uz": "4–8, olinadigan yon tugmalar"
+  },
+  "Full-size ANSI": {
+    "ru": "Полноразмерная ANSI",
+    "uz": "To‘liq o‘lchamli ANSI"
+  },
+  "TKL ANSI": {
+    "ru": "TKL ANSI, без цифрового блока",
+    "uz": "TKL ANSI, raqam blokisiz"
+  },
+  "Membrane": {
+    "ru": "Мембранные",
+    "uz": "Membranali"
+  },
+  "Mechanical · tactile": {
+    "ru": "Механические, тактильные",
+    "uz": "Mexanik, taktil"
+  },
+  "HyperX Aqua · tactile": {
+    "ru": "HyperX Aqua, тактильные",
+    "uz": "HyperX Aqua, taktil"
+  },
+  "Gateron Red · linear": {
+    "ru": "Gateron Red, линейные",
+    "uz": "Gateron Red, chiziqli"
+  },
+  "Razer Green · clicky": {
+    "ru": "Razer Green, со щелчком",
+    "uz": "Razer Green, chertishli"
+  },
+  "RGB · 5 zones": {
+    "ru": "RGB, 5 зон",
+    "uz": "RGB, 5 zona"
+  },
+  "Per-key RGB": {
+    "ru": "Индивидуальная RGB",
+    "uz": "Har tugmada RGB"
+  },
+  "Double-shot ABS": {
+    "ru": "ABS, двойное литьё",
+    "uz": "ABS, ikki qatlamli"
+  },
+  "Yes · 3/5-pin MX": {
+    "ru": "Да, MX 3/5-pin",
+    "uz": "Ha, MX 3/5-pin"
+  },
+  "Detachable": {
+    "ru": "Съёмный",
+    "uz": "Olinadigan"
+  },
+  "Swivel-to-mute": {
+    "ru": "Выключается при подъёме",
+    "uz": "Ko‘tarilganda o‘chadi"
+  },
+  "Built-in beamforming microphones": {
+    "ru": "Встроенные, с формированием луча",
+    "uz": "Ichki, yo‘naltirilgan"
+  },
+  "Fixed cardioid": {
+    "ru": "Несъёмный, кардиоидный",
+    "uz": "Olinmaydigan, kardioid"
+  },
+  "Retractable ClearCast Gen 2": {
+    "ru": "Выдвижной ClearCast Gen 2",
+    "uz": "Yig‘iladigan ClearCast Gen 2"
+  },
+  "Closed-back": {
+    "ru": "Закрытое",
+    "uz": "Yopiq"
+  },
+  "Over-ear": {
+    "ru": "Полноразмерные",
+    "uz": "Quloqni qoplaydigan"
+  },
+  "3.5 mm wired": {
+    "ru": "3,5 мм, проводное",
+    "uz": "3,5 mm, simli"
+  },
+  "3.5 mm / USB sound card": {
+    "ru": "3,5 мм / USB-звуковая карта",
+    "uz": "3,5 mm / USB ovoz kartasi"
+  },
+  "LIGHTSPEED 2.4 GHz / Bluetooth": {
+    "ru": "LIGHTSPEED 2,4 ГГц / Bluetooth",
+    "uz": "LIGHTSPEED 2,4 GHz / Bluetooth"
+  },
+  "Mirror ARGB pump cover": {
+    "ru": "Зеркальная ARGB-крышка помпы",
+    "uz": "ARGB oynali pompa qopqog‘i"
+  },
+  "360 mm radiator · mirror pump cover": {
+    "ru": "Радиатор 360 мм · зеркальная крышка помпы",
+    "uz": "360 mm radiator · oynali pompa"
+  },
+  "Dedicated VRM fan · LGA1700 contact frame": {
+    "ru": "Вентилятор VRM · прижимная рамка LGA1700",
+    "uz": "VRM ventilyatori · LGA1700 ramkasi"
+  },
+  "AF120 RGB ELITE fans · controller included": {
+    "ru": "Вентиляторы AF120 RGB ELITE · контроллер в комплекте",
+    "uz": "AF120 RGB ELITE ventilyatorlari · kontroller to‘plamda"
+  },
+  "1.54-inch LCD · 240 × 240 px": {
+    "ru": "LCD 1,54 дюйма · 240 × 240 пикселей",
+    "uz": "1,54 dyuym LCD · 240 × 240 piksel"
+  },
+  "Light Wings fans · refill port": {
+    "ru": "Вентиляторы Light Wings · порт долива",
+    "uz": "Light Wings ventilyatorlari · to‘ldirish porti"
+  },
+  "Dedicated media keys · spill-resistant design": {
+    "ru": "Отдельные мультимедийные кнопки · защита от брызг",
+    "uz": "Alohida media tugmalari · sachrashdan himoya"
+  },
+  "Aluminum body · 1000 Hz polling": {
+    "ru": "Алюминиевый корпус · опрос 1000 Гц",
+    "uz": "Alyuminiy korpus · 1000 Hz"
+  },
+  "6-key rollover · aluminum top plate": {
+    "ru": "6KRO · алюминиевая верхняя панель",
+    "uz": "6KRO · alyuminiy ustki panel"
+  },
+  "Mac / Windows mode switch · 1000 Hz": {
+    "ru": "Переключатель Mac / Windows · 1000 Гц",
+    "uz": "Mac / Windows tanlash · 1000 Hz"
+  },
+  "Aluminum top plate · cable-routing channels": {
+    "ru": "Алюминиевая панель · каналы для кабеля",
+    "uz": "Alyuminiy panel · kabel yo‘llari"
+  },
+  "Dedicated volume knob · 19-key rollover": {
+    "ru": "Отдельный регулятор громкости · 19KRO",
+    "uz": "Alohida ovoz g‘ildiragi · 19KRO"
+  },
+  "USB virtual 7.1 · aluminum frame": {
+    "ru": "Виртуальный 7.1 через USB · алюминиевая рама",
+    "uz": "USB orqali virtual 7.1 · alyuminiy rama"
+  },
+  "Rotating earcups · memory-foam ear cushions": {
+    "ru": "Поворотные чашки · амбушюры с памятью формы",
+    "uz": "Aylanuvchi kosalar · memory-foam yostiqlar"
+  },
+  "Up to 18 h battery · USB-C charging": {
+    "ru": "До 18 ч · зарядка USB-C",
+    "uz": "18 soatgacha · USB-C quvvatlash"
+  },
+  "BLUE VO!CE through G HUB on supported PCs": {
+    "ru": "BLUE VO!CE через G HUB на совместимых ПК",
+    "uz": "Mos kompyuterda G HUB orqali BLUE VO!CE"
+  },
+  "Analog volume wheel · microphone mute button": {
+    "ru": "Колесо громкости · кнопка отключения микрофона",
+    "uz": "Ovoz g‘ildiragi · mikrofonni o‘chirish tugmasi"
+  },
+  "Adjustable suspension band · rotating earcups": {
+    "ru": "Регулируемое оголовье · поворотные чашки",
+    "uz": "Sozlanadigan tasma · aylanuvchi kosalar"
+  },
+  "Windows / macOS (key mapping may differ)": {
+    "ru": "Windows / macOS, назначение клавиш может отличаться",
+    "uz": "Windows / macOS, tugma vazifalari farq qilishi mumkin"
+  },
+  "320 g (without microphone)": {
+    "ru": "320 г без микрофона",
+    "uz": "Mikrofonsiz 320 g"
+  },
+  "320 g (without cable)": {
+    "ru": "320 г без кабеля",
+    "uz": "Kabelsiz 320 g"
+  },
+  "Platform-dependent connector support": {
+    "ru": "Зависит от разъёмов платформы",
+    "uz": "Platforma ulagichlariga bog‘liq"
+  }
+}

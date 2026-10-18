@@ -11,7 +11,10 @@ export type Category =
   | "liquid"
   | "cooler"
   | "case"
-  | "build";
+  | "build"
+  | "mouse"
+  | "keyboard"
+  | "headset";
 export type Product = {
   id: string;
   name: string;
@@ -55,6 +58,9 @@ export const categories: Category[] = [
   "cooler",
   "case",
   "build",
+  "mouse",
+  "keyboard",
+  "headset",
 ];
 export const price = (n: number) => new Intl.NumberFormat("ru-RU").format(n);
 export async function api<T = Record<string, unknown>>(

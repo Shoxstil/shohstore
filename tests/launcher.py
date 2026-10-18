@@ -61,7 +61,7 @@ with tempfile.TemporaryDirectory(prefix='Shohstore download с пробелам�
     proc,log=start(log1)
     try:
         _,catalog=request('/api/products')
-        assert len(catalog['products'])==15
+        assert len(catalog['products'])==84
         response=urllib.request.urlopen(url,timeout=10)
         html=response.read().decode()
         assert '/assets/frontend-' in html and '__SHOHSTORE_STANDALONE__' not in html
@@ -81,7 +81,7 @@ with tempfile.TemporaryDirectory(prefix='Shohstore download с пробелам�
     proc,log=start(log2)
     try:
         _,catalog=request('/api/products')
-        assert len(catalog['products'])==16
+        assert len(catalog['products'])==85
         assert any(p['id']==product_id for p in catalog['products'])
         _,login=request('/api/auth/login',{'identifier':'Launcher Admin','code':code})
         assert login['user']['role']=='admin'

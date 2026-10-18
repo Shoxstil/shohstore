@@ -14,6 +14,7 @@ export default defineConfig({
             (path === "/" ||
               path === "/index.html" ||
               path === "/admin" ||
+              path === "/catalog" ||
               path.startsWith("/product/"))
           )
             req.url = "/frontend.html";

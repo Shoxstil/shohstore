@@ -1,0 +1,308 @@
+[
+  {
+    "id": "ryzen-7-7800x3d",
+    "name": "AMD Ryzen 7 7800X3D",
+    "category": "cpu",
+    "price": 4790000,
+    "specs": {
+      "Socket": "AM5",
+      "Cores": "8",
+      "Threads": "16",
+      "Base clock": "4.2 GHz",
+      "Boost clock": "5.0 GHz",
+      "TDP": "120 W"
+    },
+    "description": {
+      "ru": "Тщательно подобранные комплектующие для стабильной работы, комфортного гейминга и ваших идей. Проверьте совместимость со своей сборкой перед покупкой.",
+      "en": "Carefully selected hardware for reliable performance, effortless gaming and your next big idea. Check compatibility with your build before ordering.",
+      "uz": "Barqaror ishlash, qulay o‘yinlar va yangi g‘oyalar uchun tanlangan qismlar. Xarid qilishdan oldin moslikni tekshiring."
+    },
+    "stock": 12,
+    "badge": "bestseller",
+    "oldPrice": 5150000,
+    "brand": "AMD",
+    "socket": "AM5"
+  },
+  {
+    "id": "geforce-rtx-5070",
+    "name": "GeForce RTX 5070 12GB",
+    "category": "gpu",
+    "price": 8690000,
+    "specs": {
+      "Memory": "12 GB GDDR7",
+      "Memory bus": "192 bit",
+      "Boost clock": "2.51 GHz",
+      "Power": "250 W"
+    },
+    "description": {
+      "ru": "Тщательно подобранные комплектующие для стабильной работы, комфортного гейминга и ваших идей. Проверьте совместимость со своей сборкой перед покупкой.",
+      "en": "Carefully selected hardware for reliable performance, effortless gaming and your next big idea. Check compatibility with your build before ordering.",
+      "uz": "Barqaror ishlash, qulay o‘yinlar va yangi g‘oyalar uchun tanlangan qismlar. Xarid qilishdan oldin moslikni tekshiring."
+    },
+    "stock": 12,
+    "badge": "new",
+    "brand": "MSI"
+  },
+  {
+    "id": "asus-tuf-b650",
+    "name": "ASUS TUF Gaming B650-PLUS",
+    "category": "mb-amd",
+    "price": 2790000,
+    "specs": {
+      "Socket": "AM5",
+      "Chipset": "AMD B650",
+      "Memory": "DDR5 · 192 GB max",
+      "Form factor": "ATX",
+      "Wireless": "Wi-Fi 6"
+    },
+    "description": {
+      "ru": "Тщательно подобранные комплектующие для стабильной работы, комфортного гейминга и ваших идей. Проверьте совместимость со своей сборкой перед покупкой.",
+      "en": "Carefully selected hardware for reliable performance, effortless gaming and your next big idea. Check compatibility with your build before ordering.",
+      "uz": "Barqaror ishlash, qulay o‘yinlar va yangi g‘oyalar uchun tanlangan qismlar. Xarid qilishdan oldin moslikni tekshiring."
+    },
+    "stock": 12,
+    "brand": "ASUS",
+    "socket": "AM5"
+  },
+  {
+    "id": "corsair-vengeance-32",
+    "name": "Corsair Vengeance 32GB",
+    "category": "ram",
+    "price": 1490000,
+    "specs": {
+      "Memory": "32 GB (2 × 16 GB)",
+      "Type": "DDR5",
+      "Frequency": "6000 MHz",
+      "Latency": "CL30"
+    },
+    "description": {
+      "ru": "Тщательно подобранные комплектующие для стабильной работы, комфортного гейминга и ваших идей. Проверьте совместимость со своей сборкой перед покупкой.",
+      "en": "Carefully selected hardware for reliable performance, effortless gaming and your next big idea. Check compatibility with your build before ordering.",
+      "uz": "Barqaror ishlash, qulay o‘yinlar va yangi g‘oyalar uchun tanlangan qismlar. Xarid qilishdan oldin moslikni tekshiring."
+    },
+    "stock": 12,
+    "brand": "CORSAIR",
+    "badge": "choice"
+  },
+  {
+    "id": "intel-core-i5-14600kf",
+    "name": "Intel Core i5-14600KF",
+    "category": "cpu",
+    "price": 3490000,
+    "specs": {
+      "Socket": "LGA1700",
+      "Cores": "14 (6P + 8E)",
+      "Threads": "20",
+      "Base clock": "3.5 GHz",
+      "Boost clock": "5.3 GHz",
+      "TDP": "125 W"
+    },
+    "description": {
+      "ru": "Тщательно подобранные комплектующие для стабильной работы, комфортного гейминга и ваших идей. Проверьте совместимость со своей сборкой перед покупкой.",
+      "en": "Carefully selected hardware for reliable performance, effortless gaming and your next big idea. Check compatibility with your build before ordering.",
+      "uz": "Barqaror ishlash, qulay o‘yinlar va yangi g‘oyalar uchun tanlangan qismlar. Xarid qilishdan oldin moslikni tekshiring."
+    },
+    "stock": 12,
+    "brand": "Intel",
+    "socket": "LGA1700"
+  },
+  {
+    "id": "ryzen-5-7600",
+    "name": "AMD Ryzen 5 7600",
+    "category": "cpu",
+    "price": 2390000,
+    "specs": {
+      "Socket": "AM5",
+      "Cores": "6",
+      "Threads": "12",
+      "Base clock": "3.8 GHz",
+      "Boost clock": "5.1 GHz",
+      "TDP": "65 W"
+    },
+    "description": {
+      "ru": "Тщательно подобранные комплектующие для стабильной работы, комфортного гейминга и ваших идей. Проверьте совместимость со своей сборкой перед покупкой.",
+      "en": "Carefully selected hardware for reliable performance, effortless gaming and your next big idea. Check compatibility with your build before ordering.",
+      "uz": "Barqaror ishlash, qulay o‘yinlar va yangi g‘oyalar uchun tanlangan qismlar. Xarid qilishdan oldin moslikni tekshiring."
+    },
+    "stock": 12,
+    "brand": "AMD",
+    "socket": "AM5"
+  },
+  {
+    "id": "rtx-4060",
+    "name": "ASUS Dual GeForce RTX 4060",
+    "category": "gpu",
+    "price": 4590000,
+    "specs": {
+      "Memory": "8 GB GDDR6",
+      "Memory bus": "128 bit",
+      "Boost clock": "2.46 GHz",
+      "Power": "115 W"
+    },
+    "description": {
+      "ru": "Тщательно подобранные комплектующие для стабильной работы, комфортного гейминга и ваших идей. Проверьте совместимость со своей сборкой перед покупкой.",
+      "en": "Carefully selected hardware for reliable performance, effortless gaming and your next big idea. Check compatibility with your build before ordering.",
+      "uz": "Barqaror ishlash, qulay o‘yinlar va yangi g‘oyalar uchun tanlangan qismlar. Xarid qilishdan oldin moslikni tekshiring."
+    },
+    "stock": 12,
+    "brand": "ASUS"
+  },
+  {
+    "id": "msi-b760",
+    "name": "MSI PRO B760-P WIFI",
+    "category": "mb-intel",
+    "price": 2290000,
+    "specs": {
+      "Socket": "LGA1700",
+      "Chipset": "Intel B760",
+      "Memory": "DDR5 · 192 GB max",
+      "Form factor": "ATX"
+    },
+    "description": {
+      "ru": "Тщательно подобранные комплектующие для стабильной работы, комфортного гейминга и ваших идей. Проверьте совместимость со своей сборкой перед покупкой.",
+      "en": "Carefully selected hardware for reliable performance, effortless gaming and your next big idea. Check compatibility with your build before ordering.",
+      "uz": "Barqaror ishlash, qulay o‘yinlar va yangi g‘oyalar uchun tanlangan qismlar. Xarid qilishdan oldin moslikni tekshiring."
+    },
+    "stock": 12,
+    "brand": "MSI",
+    "socket": "LGA1700"
+  },
+  {
+    "id": "corsair-rm750e",
+    "name": "Corsair RM750e 750W",
+    "category": "psu",
+    "price": 1390000,
+    "specs": {
+      "Power": "750 W",
+      "Certification": "80 PLUS Gold",
+      "Modularity": "Full modular",
+      "Standard": "ATX 3.0"
+    },
+    "description": {
+      "ru": "Тщательно подобранные комплектующие для стабильной работы, комфортного гейминга и ваших идей. Проверьте совместимость со своей сборкой перед покупкой.",
+      "en": "Carefully selected hardware for reliable performance, effortless gaming and your next big idea. Check compatibility with your build before ordering.",
+      "uz": "Barqaror ishlash, qulay o‘yinlar va yangi g‘oyalar uchun tanlangan qismlar. Xarid qilishdan oldin moslikni tekshiring."
+    },
+    "stock": 12,
+    "brand": "CORSAIR"
+  },
+  {
+    "id": "deepcool-ls520",
+    "name": "DeepCool LS520 SE",
+    "category": "liquid",
+    "price": 1190000,
+    "specs": {
+      "Radiator": "240 mm",
+      "Fans": "2 × 120 mm",
+      "Socket": "AM5 / LGA1700",
+      "Lighting": "ARGB"
+    },
+    "description": {
+      "ru": "Тщательно подобранные комплектующие для стабильной работы, комфортного гейминга и ваших идей. Проверьте совместимость со своей сборкой перед покупкой.",
+      "en": "Carefully selected hardware for reliable performance, effortless gaming and your next big idea. Check compatibility with your build before ordering.",
+      "uz": "Barqaror ishlash, qulay o‘yinlar va yangi g‘oyalar uchun tanlangan qismlar. Xarid qilishdan oldin moslikni tekshiring."
+    },
+    "stock": 12,
+    "brand": "DEEPCOOL"
+  },
+  {
+    "id": "deepcool-ak400",
+    "name": "DeepCool AK400 Digital",
+    "category": "cooler",
+    "price": 590000,
+    "specs": {
+      "Type": "Air cooling",
+      "Height": "156 mm",
+      "Socket": "AM5 / LGA1700",
+      "Fans": "1 × 120 mm"
+    },
+    "description": {
+      "ru": "Тщательно подобранные комплектующие для стабильной работы, комфортного гейминга и ваших идей. Проверьте совместимость со своей сборкой перед покупкой.",
+      "en": "Carefully selected hardware for reliable performance, effortless gaming and your next big idea. Check compatibility with your build before ordering.",
+      "uz": "Barqaror ishlash, qulay o‘yinlar va yangi g‘oyalar uchun tanlangan qismlar. Xarid qilishdan oldin moslikni tekshiring."
+    },
+    "stock": 12,
+    "brand": "DEEPCOOL"
+  },
+  {
+    "id": "nzxt-h5-flow",
+    "name": "NZXT H5 Flow",
+    "category": "case",
+    "price": 1390000,
+    "specs": {
+      "Form factor": "ATX / Micro-ATX / Mini-ITX",
+      "GPU clearance": "365 mm",
+      "Material": "Steel / tempered glass",
+      "Fans": "2 × 120 mm"
+    },
+    "description": {
+      "ru": "Тщательно подобранные комплектующие для стабильной работы, комфортного гейминга и ваших идей. Проверьте совместимость со своей сборкой перед покупкой.",
+      "en": "Carefully selected hardware for reliable performance, effortless gaming and your next big idea. Check compatibility with your build before ordering.",
+      "uz": "Barqaror ishlash, qulay o‘yinlar va yangi g‘oyalar uchun tanlangan qismlar. Xarid qilishdan oldin moslikni tekshiring."
+    },
+    "stock": 12,
+    "brand": "NZXT"
+  },
+  {
+    "id": "samsung-990-evo",
+    "name": "Samsung 990 EVO 1TB",
+    "category": "ssd",
+    "price": 1190000,
+    "specs": {
+      "Capacity": "1 TB",
+      "Interface": "PCIe 4.0 ×4 / 5.0 ×2",
+      "Read": "5000 MB/s",
+      "Write": "4200 MB/s"
+    },
+    "description": {
+      "ru": "Тщательно подобранные комплектующие для стабильной работы, комфортного гейминга и ваших идей. Проверьте совместимость со своей сборкой перед покупкой.",
+      "en": "Carefully selected hardware for reliable performance, effortless gaming and your next big idea. Check compatibility with your build before ordering.",
+      "uz": "Barqaror ishlash, qulay o‘yinlar va yangi g‘oyalar uchun tanlangan qismlar. Xarid qilishdan oldin moslikni tekshiring."
+    },
+    "stock": 12,
+    "brand": "SAMSUNG"
+  },
+  {
+    "id": "shohstore-neo",
+    "name": "Shohstore NEO",
+    "category": "build",
+    "price": 15990000,
+    "specs": {
+      "Processor": "AMD Ryzen 5 7600",
+      "Graphics": "GeForce RTX 4060 8 GB",
+      "Memory": "32 GB DDR5",
+      "Storage": "1 TB NVMe SSD",
+      "Power": "650 W · 80 PLUS Gold"
+    },
+    "description": {
+      "ru": "Тщательно подобранные комплектующие для стабильной работы, комфортного гейминга и ваших идей. Проверьте совместимость со своей сборкой перед покупкой.",
+      "en": "Carefully selected hardware for reliable performance, effortless gaming and your next big idea. Check compatibility with your build before ordering.",
+      "uz": "Barqaror ishlash, qulay o‘yinlar va yangi g‘oyalar uchun tanlangan qismlar. Xarid qilishdan oldin moslikni tekshiring."
+    },
+    "stock": 12,
+    "brand": "SHOHSTORE",
+    "badge": "choice",
+    "oldPrice": 17490000
+  },
+  {
+    "id": "shohstore-pro",
+    "name": "Shohstore PRO",
+    "category": "build",
+    "price": 24990000,
+    "specs": {
+      "Processor": "AMD Ryzen 7 7800X3D",
+      "Graphics": "GeForce RTX 5070 12 GB",
+      "Memory": "32 GB DDR5 6000",
+      "Storage": "1 TB NVMe SSD",
+      "Power": "750 W · 80 PLUS Gold"
+    },
+    "description": {
+      "ru": "Тщательно подобранные комплектующие для стабильной работы, комфортного гейминга и ваших идей. Проверьте совместимость со своей сборкой перед покупкой.",
+      "en": "Carefully selected hardware for reliable performance, effortless gaming and your next big idea. Check compatibility with your build before ordering.",
+      "uz": "Barqaror ishlash, qulay o‘yinlar va yangi g‘oyalar uchun tanlangan qismlar. Xarid qilishdan oldin moslikni tekshiring."
+    },
+    "stock": 12,
+    "brand": "SHOHSTORE",
+    "badge": "new"
+  }
+]

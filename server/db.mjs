@@ -2,7 +2,7 @@ import { DatabaseSync } from "node:sqlite";
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { scryptSync, randomBytes, timingSafeEqual } from "node:crypto";
-import { seedProducts } from "./seed.mjs";
+import { synchronizeCatalog } from "./catalog-upgrade.mjs";
 import { isValidPhoneNumber } from "libphonenumber-js/max";
 const dbPath = process.env.SHOHSTORE_DB || resolve("data/store.sqlite");
 mkdirSync(dirname(dbPath), { recursive: true });
@@ -14,18 +14,7 @@ CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY,user_id INTEGER NOT N
 CREATE TABLE IF NOT EXISTS carts(user_id INTEGER PRIMARY KEY REFERENCES users(id),data TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS orders(id TEXT PRIMARY KEY,user_id INTEGER NOT NULL REFERENCES users(id),data TEXT NOT NULL,total INTEGER NOT NULL,created TEXT DEFAULT CURRENT_TIMESTAMP);
 CREATE TABLE IF NOT EXISTS meta(key TEXT PRIMARY KEY,value TEXT);`);
-if (!db.prepare("SELECT value FROM meta WHERE key='seeded'").get()) {
-  db.exec("BEGIN");
-  try {
-    const insert = db.prepare("INSERT OR IGNORE INTO products VALUES(?,?)");
-    for (const p of seedProducts) insert.run(p.id, JSON.stringify(p));
-    db.prepare("INSERT INTO meta VALUES('seeded','1')").run();
-    db.exec("COMMIT");
-  } catch (e) {
-    db.exec("ROLLBACK");
-    throw e;
-  }
-}
+synchronizeCatalog(db);
 export function hashCode(code) {
   const salt = randomBytes(16).toString("hex");
   return salt + ":" + scryptSync(code, salt, 64).toString("hex");
